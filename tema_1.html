@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ca" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 1: Fonaments de C# i Unity - CE Videojocs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Prism.js per ressaltat de sintaxi C# -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0b0f19',
+                            card: '#111827',
+                            border: '#1f2937'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans antialiased leading-relaxed">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="text-slate-400 hover:text-white transition flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> Índex del Curs
+                </a>
+                <span class="text-slate-700">|</span>
+                <span class="text-blue-400 font-mono text-xs font-bold px-2 py-0.5 bg-blue-500/10 rounded border border-blue-500/20">TEMA 1</span>
+            </div>
+            <div class="text-xs font-mono text-slate-400 hidden sm:block">
+                EVPXIA Disseny — C# & Unity Fundamentals
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row gap-10">
+
+        <!-- Sidebar Navigation (TOC) -->
+        <aside class="lg:w-64 flex-shrink-0">
+            <div class="sticky top-24 bg-slate-900 border border-slate-800 rounded-xl p-5 text-xs">
+                <h4 class="font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Contingut del Tema</h4>
+                <nav class="space-y-2 font-medium text-slate-400">
+                    <a href="#sec-1" class="block hover:text-blue-400 transition">1. Visió General d'un Script</a>
+                    <a href="#sec-2" class="block hover:text-blue-400 transition">2. Variables i Tipus de Dades</a>
+                    <a href="#sec-3" class="block hover:text-blue-400 transition">3. Condicionals i Switch</a>
+                    <a href="#sec-4" class="block hover:text-blue-400 transition">4. Bucles i Iteracions</a>
+                    <a href="#sec-5" class="block hover:text-blue-400 transition">5. Arrays i Col·leccions</a>
+                    <a href="#sec-6" class="block hover:text-blue-400 transition">6. Mètodes i Paràmetres</a>
+                    <a href="#sec-7" class="block hover:text-blue-400 transition">7. POO: Classes i Herència</a>
+                    <a href="#sec-8" class="block hover:text-blue-400 transition">8. Algorísmia en Videojocs</a>
+                    <a href="#sec-unity" class="block text-emerald-400 hover:text-emerald-300 font-bold transition pt-2 border-t border-slate-800">🎮 GameObjects, Transform i Destroy</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Column -->
+        <main class="flex-1 space-y-16">
+
+            <!-- Title Header -->
+            <header class="border-b border-slate-800 pb-8">
+                <span class="text-xs font-mono text-blue-400 font-bold uppercase tracking-widest block mb-2">Unitat Formativa 2</span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
+                    Programació C# des de Zero: Variables, Condicionals, Bucles, POO i Manipulació de Unity
+                </h1>
+                <p class="text-slate-400 text-lg leading-relaxed">
+                    Aquest tema acompanya l'alumnat des dels conceptes fonamentals de la programació fins a la creació, modificació i destrucció d'objectes interactius directament al motor Unity.
+                </p>
+            </header>
+
+            <!-- SECCIÓ 1: VISIÓ GENERAL -->
+            <section id="sec-1" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1</span>
+                    <h2 class="text-2xl font-bold text-white">Visió General d'un Script de Unity</h2>
+                </div>
+                <p class="text-slate-300">
+                    A Unity escrivim el nostre codi en <strong>C#</strong>, un llenguatge Orientat a Objectes (POO) adoptat massivament a la indústria dels videojocs. Podem pensar en els scripts com a "guions de comportament" que associem als objectes de la nostra escena (<code>GameObjects</code>).
+                </p>
+                
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3 text-sm">
+                    <h4 class="font-bold text-white text-base flex items-center gap-2">
+                        <i class="fa-solid fa-folder-tree text-blue-400"></i> Normes i Convencions Importants
+                    </h4>
+                    <ul class="list-disc list-inside space-y-2 text-slate-300">
+                        <li><strong>Ubicació:</strong> Es recomana crear una carpeta anomenada <code>Scripts</code> dins de <code>Assets/</code> per a mantenir el projecte organitzat.</li>
+                        <li><strong>Nomenclatura:</strong> El nom del fitxer i el nom de la classe han de ser <strong>exactament iguals</strong> (ex. <code>Player.cs</code> conté <code>public class Player</code>). Si no coincideixen, Unity no podrà carregar el component.</li>
+                        <li><strong>Estil:</strong> Els noms de les classes utilitzen la convenció <code>UpperCamelCase</code> (o PascalCase).</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-lg font-bold text-white">Estructura per Defecte d'un Script (`MonoBehaviour`)</h3>
+                    <p class="text-slate-300 text-sm">
+                        Quan creem un script nou, Unity genera automàticament una classe pública que deriva o hereta de la classe base <code>MonoBehaviour</code>.
+                    </p>
+                    <pre><code class="language-csharp">using UnityEngine; // Permet accedir a l'API del motor de Unity
+
+public class Player : MonoBehaviour
+{
+    // Es crida automàticament una sola vegada quan s'inicia el joc
+    void Start()
+    {
+        Debug.Log("El jugador ha estat creat a l'escena.");
+    }
+
+    // Es crida automàticament a cada fotograma (frame) del joc
+    void Update()
+    {
+        // Útil per a detectar entrades de teclat o actualitzar posicions
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 2: VARIABLES -->
+            <section id="sec-2" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">2</span>
+                    <h2 class="text-2xl font-bold text-white">Variables, Tipus de Dades i Encapsulació</h2>
+                </div>
+                <p class="text-slate-300">
+                    Una variable és un contenidor a la memòria de l'ordinador que guarda una informació que pot canviar durant l'execució del joc (per exemple, la vida, el nom o la velocitat d'un personatge).
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <h4 class="font-bold text-blue-400 text-sm mb-2">Elements d'una Declaració</h4>
+                        <ul class="text-xs space-y-1.5 text-slate-300">
+                            <li><strong>Modificador d'àmbit:</strong> <code>public</code> o <code>private</code>.</li>
+                            <li><strong>Tipus de dada:</strong> Quin tipus d'informació guarda.</li>
+                            <li><strong>Nom:</strong> Segueix la convenció <code>camelCase</code>.</li>
+                            <li><strong>Valor inicial (opcional):</strong> Assignació inicial.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <h4 class="font-bold text-blue-400 text-sm mb-2">Tipus de Dades BÀSICS</h4>
+                        <ul class="text-xs space-y-1.5 text-slate-300">
+                            <li><code>int</code>: Nombres enters (ex. <code>int ammoCount = 30;</code>)</li>
+                            <li><code>float</code>: Nombres decimals (sempre amb 'f', ex. <code>float speed = 5.5f;</code>)</li>
+                            <li><code>string</code>: Cadenes de text (ex. <code>string myName = "Heroi";</code>)</li>
+                            <li><code>bool</code>: Valor verdader o fals (ex. <code>bool hasAllKeys = false;</code>)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+                    <h3 class="font-bold text-white text-base">Bones Pràctiques i Encapsulació en C# / Unity</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-300 space-y-2">
+                        <li><strong><code>private</code> per defecte:</strong> Les variables han de ser privades tret que altres scripts necessitin accedir-hi directament. Si no s'indica modificador, C# la considera privada per defecte.</li>
+                        <li><strong>Atribut <code>[SerializeField]</code>:</strong> Permet veure i modificar una variable <code>private</code> des de l'Inspector de Unity sense exposar-la a altres scripts.</li>
+                        <li><strong>Convenció de Microsoft .NET:</strong> Utilitzar el prefix <code>_</code> per a variables privades de classe (ex. <code>private float _speed;</code>) per a identificar-les ràpidament al codi.</li>
+                    </ul>
+                </div>
+
+                <!-- BOX REPTES BLOC 1 -->
+                <div class="bg-blue-950/30 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 1: Variables i Operacions
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 1.1 (Script `Item`):</strong> Crea l'script <code>Item</code> amb variables per al nom, la descripció, una referència d'imatge (<code>Sprite</code>) i la força d'atac. Inicialitza els valors des de l'inspector i mostra els valors per consola a l'arrancar el joc (<code>Start</code>).</p>
+                        <p><strong>Repte 1.2 (`TipCalculator`):</strong> Crea un script per a calcular el total d'un compte de restaurant amb un 20% de propina inclosa. Declara les variables necessàries, calcula el resultat i mostra'l per consola.</p>
+                        <p><strong>Repte 1.3 (Calculadora de Notes):</strong> Crea un script que calculi 5 notes aleatòries amb <code>Random.Range(0f, 10f)</code> i mostri la seva mitjana amb 2 decimals fent servir <code>Mathf.Round(average * 100f) / 100f</code>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 3: CONDICIONALS -->
+            <section id="sec-3" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">3</span>
+                    <h2 class="text-2xl font-bold text-white">Sentències Condicionals i Control de Flux</h2>
+                </div>
+                <p class="text-slate-300">
+                    Les condicionals permeten prendre decisions al codi: executar certes seccions de programa només si es compleix una condició.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4 text-xs font-mono">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <span class="text-slate-500 font-sans block font-bold mb-2">Operadors Relacionals</span>
+                        <p>== (Igual a)</p>
+                        <p>!= (Diferent de)</p>
+                        <p>&gt;= (Major o igual)</p>
+                        <p>&lt;= (Menor o igual)</p>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <span class="text-slate-500 font-sans block font-bold mb-2">Operadors Lògics</span>
+                        <p>&& (AND - Es compleixen totes les condicions)</p>
+                        <p>|| (OR - Es compleix almenys una condició)</p>
+                        <p>!  (NOT - Inverteix el valor booleà)</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Estructura `if / else if / else` i Sentència `switch`</h3>
+                    <pre><code class="language-csharp">// Exemple d'Avaluació de Notes
+float nota = 7.5f;
+
+if (nota >= 0.0f && nota < 5.0f) {
+    Debug.Log("Insuficient");
+} else if (nota >= 5.0f && nota < 6.0f) {
+    Debug.Log("Suficient");
+} else if (nota >= 6.0f && nota < 7.0f) {
+    Debug.Log("Bé");
+} else if (nota >= 7.0f && nota < 9.0f) {
+    Debug.Log("Notable");
+} else if (nota >= 9.0f && nota <= 10.0f) {
+    Debug.Log("Excel·lent");
+} else {
+    Debug.Log("Error: Nota no vàlida");
+}
+
+// Sentència switch per a valors concrets o estats
+int weaponID = 2;
+switch (weaponID)
+{
+    case 1:
+        Debug.Log("Arma: Pistola");
+        break;
+    case 2:
+        Debug.Log("Arma: Ganivet");
+        break;
+    default:
+        Debug.Log("Sense arma assignada");
+        break;
+}</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 2 -->
+                <div class="bg-blue-950/30 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 2: Condicionals i Teclat
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 2.1 (Control d'Edat):</strong> Crea un script que dada una edat mostri per pantalla si la persona pot conduir o no.</p>
+                        <p><strong>Repte 2.2 (Puntuació per Tecla Espai):</strong> En premre la tecla Espai (<code>Input.GetKeyDown(KeyCode.Space)</code>), suma 10 punts a la puntuació inicial (0). Si la puntuació supera 50 punts, mostra el missatge "Ets genial!" <strong>una sola vegada</strong> controlant-ho amb una variable booleana visible des de l'inspector.</p>
+                        <p><strong>Repte 2.3 (Canvi de Color de Cub):</strong> Crea un Cub 3D a l'escena. En iniciar el programa el color del cub ha de ser vermell (<code>GetComponent&lt;Renderer&gt;().material.color = Color.red;</code>). Quan la puntuació de l'usuari superi els 50 punts, el cub ha de canviar a color verd.</p>
+                        <p><strong>Repte 2.4 (LevelInformation amb Switch):</strong> Implementa un script que canviï el nivell de dificultat (<code>easy</code>, <code>medium</code>, <code>hard</code>) de forma aleatòria a l'Start() i en premre la tecla Espai, mostrant la configuració mitjançant un <code>switch</code>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 4: BUCLES -->
+            <section id="sec-4" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">4</span>
+                    <h2 class="text-2xl font-bold text-white">Sentències Iteratives (Bucles)</h2>
+                </div>
+                <p class="text-slate-300">
+                    Els bucles ens permeten repetir un bloc de codi diverses vegades. Són fonamentals en videojocs per a recórrer llistes d'enemics, actualitzar inventaris o processar explosions.
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-blue-400 mb-2">Bucle `for`</h4>
+                        <p class="text-slate-400 mb-2">Utilitzat quan coneixem exactament el número d'iteracions.</p>
+                        <pre><code class="language-csharp">for (int i = 0; i < 10; i++)
+{
+    Debug.Log(i);
+}</code></pre>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-blue-400 mb-2">Bucle `while` / `do-while`</h4>
+                        <p class="text-slate-400 mb-2">S'executa mentre una condició sigui certa. ¡Alerta amb bucles infinits!</p>
+                        <pre><code class="language-csharp">while (health > 0)
+{
+    // Execució
+}</code></pre>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-blue-400 mb-2">Bucle `foreach`</h4>
+                        <p class="text-slate-400 mb-2">Dissenyat especialment per a recórrer tots els elements d'un Array o Col·lecció.</p>
+                        <pre><code class="language-csharp">foreach (var item in items)
+{
+    Debug.Log(item);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- BOX REPTES BLOC 3 -->
+                <div class="bg-blue-950/30 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 3: Bucles i Patrons
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 3.1 (Compte Enrere):</strong> Crea un programa que mostri un compte enrere de 10 a 0 en arrancar el joc, i finalment mostri el missatge "Run!".</p>
+                        <p><strong>Repte 3.2 (Mòdul i Parells):</strong> Mostra els nombres parells fins a 100 fent servir l'operador mòdul (<code>n % 2 == 0</code>). Si el número és el 50, mostra "Ja ets a la meitat!". Implementa el mateix exercici amb <code>for</code>, <code>while</code> i <code>do-while</code>.</p>
+                        <p><strong>Repte 3.3 (Patró de Rectangle i Triangle):</strong> Escriu un script que dibuixi per consola un rectangle (ex. 4x3 de caràcters `#`) i un patró de triangle d'una mida introduïda per l'usuari fent servir bucles anidats.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 5: ARRAYS -->
+            <section id="sec-5" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">5</span>
+                    <h2 class="text-2xl font-bold text-white">Arrays i Estructures de Dades</h2>
+                </div>
+                <p class="text-slate-300">
+                    Un <strong>Array</strong> és una col·lecció ordenada d'elements del mateix tipus amb una mida fixa. A Unity podem assignar tant la mida com els valors directament des de l'Inspector.
+                </p>
+
+                <pre><code class="language-csharp">public string[] names; // Declaració sense inicialitzar
+public string[] items = new string[5]; // Array de 5 elements buits
+public int[] ages = { 5, 10, 15, 33 }; // Inicialització directa
+
+void Start()
+{
+    Debug.Log(ages[1]); // Accedeix al segon element (índex 1) -> Mostra 10
+    items[0] = "Espasa"; // Assigna valor al primer element
+    Debug.Log("Mida de l'array: " + ages.Length); // Propietat .Length
+}</code></pre>
+            </section>
+
+            <!-- SECCIÓ 6: MÈTODES -->
+            <section id="sec-6" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">6</span>
+                    <h2 class="text-2xl font-bold text-white">Mètodes, Paràmetres i Retorn de Valors</h2>
+                </div>
+                <p class="text-slate-300">
+                    Els mètodes o funcions permeten dividir el codi en blocs modulars, reutilitzables i nets. Es fan servir per a dissenyar les accions del joc (ex. <code>Attack()</code>, <code>TakeDamage()</code>, <code>CalculateScore()</code>).
+                </p>
+
+                <pre><code class="language-csharp">// Mètode sense retorn (void) i amb paràmetres
+public void ChangeColor(GameObject obj, Color newColor)
+{
+    obj.GetComponent<Renderer>().material.color = newColor;
+}
+
+// Mètode amb retorn d'un tipus de dada (int)
+public int Sum(int a, int b)
+{
+    return a + b;
+}</code></pre>
+
+                <!-- BOX REPTES BLOC 4 -->
+                <div class="bg-blue-950/30 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 4: Arrays i Mètodes
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 4.1 (Gestor de Noms i Dades):</strong> Crea un array de 5 noms, 5 edats i 5 cotxes assignats des de l'inspector. En pitjar la barra espaiadora, mostra les dades de tots els usuaris o selecciona'n un de manera aleatòria fent servir un bucle <code>for</code>.</p>
+                        <p><strong>Repte 4.2 (Canvi de Color d'Array de Cubs):</strong> Crea un projecte amb 3 cubs en escena i un array que els contingui. Quan es teclegi la tecla 'R', canvia el seu color a vermell fent servir un bucle <code>foreach</code>. Després reescriu-lo amb un bucle <code>for</code>.</p>
+                        <p><strong>Repte 4.3 (Control de Vida de Jugador):</strong> En prémer Espai, aplica un dany aleatori al jugador. Implementa el mètode <code>Damage(int amount)</code> per a decrementar la vida i <code>IsDead()</code> (que retorna un <code>bool</code>) per a comprovar si la vida és menor o igual a 0. Evita que es pugui seguir aplicant dany si el jugador ja està mort.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 7: POO I CLASSES -->
+            <section id="sec-7" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">7</span>
+                    <h2 class="text-2xl font-bold text-white">Programació Orientada a Objectes (POO): Herència i Polimorfisme</h2>
+                </div>
+                <p class="text-slate-300">
+                    A Unity podem crear les nostres pròpies classes personalitzades per a representar conceptes complexos com dades d'armes, ítems o jugadors. Per a poder visualitzar classes personalitzades a l'Inspector cal utilitzar l'atribut <code>[System.Serializable]</code>.
+                </p>
+
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
+                    <h3 class="font-bold text-white text-base">Nivells d'Accés i Herència</h3>
+                    <div class="grid md:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                            <strong class="text-blue-400 block mb-1">public</strong>
+                            Accessible des de qualsevol script.
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                            <strong class="text-blue-400 block mb-1">private</strong>
+                            Accessible només dins la mateixa classe.
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded border border-slate-800">
+                            <strong class="text-blue-400 block mb-1">protected</strong>
+                            Accessible dins la classe i per les classes que hereten d'ella.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-lg font-bold text-white">Exemple de Mètodes Virtuals (`virtual`) i Sobrescrits (`override`)</h3>
+                    <pre><code class="language-csharp">// Classe Base
+[System.Serializable]
+public class Item 
+{
+    [SerializeField] protected string itemName;
+    
+    public virtual void MyTreat() 
+    {
+        Debug.Log("Soc un ítem general.");
+    }
+}
+
+// Classe Derivada (Herència)
+public class Fruit : Item 
+{
+    public override void MyTreat() 
+    {
+        Debug.Log("Soc una fruita i restauro la salut!");
+    }
+}</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 5 -->
+                <div class="bg-blue-950/30 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 5: POO i BBDD
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 5.1 (`CustomerDB`):</strong> Crea un script que gestioni un array de 4 clients (classe <code>Customer</code> amb nom, edat, gènere i ocupació). Fent servir entrades de teclat ('T': mostra tots, '0'..'3': mostra el client seleccionat, 'G': mostra homes, 'M': augmenta l'edat de tots en 3 anys).</p>
+                        <p><strong>Repte 5.2 (Sistema Polimòrfic d'Ítems):</strong> Implementa la classe base <code>Item</code> amb el mètode virtual <code>MyTreat()</code>, i les classes <code>Fruit</code> i <code>Coin</code> que el sobrescriuen. Crea un script <code>ItemDataBase</code> amb un array d'ítems heterogeni i crida al mètode sobrescrit de cada un.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 8: ALGORÍSMIA -->
+            <section id="sec-8" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">8</span>
+                    <h2 class="text-2xl font-bold text-white">Anàlisi d'Algorismes i Resolució de Problemes</h2>
+                </div>
+                <p class="text-slate-300">
+                    Analitzem problemes típics com la generació d'elements aleatoris <strong>sense repetició</strong> (per exemple, assignar races a eliminar en una missió).
+                </p>
+
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+                    <h4 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-bug"></i> Exercici d'Anàlisi d'Algorisme
+                    </h4>
+                    <pre><code class="language-csharp">private bool Contiene(int n, int[] randomsGenerados)
+{
+    bool result = false;
+    for (int i = 0; i < randomsGenerados.Length; i++)
+    {
+        if (n == randomsGenerados[i])
+        {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- SECCIÓ UNITY: GAMEOBJECTS, TRANSFORM I DESTROY -->
+            <section id="sec-unity" class="space-y-6 border-t border-slate-800 pt-10">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-cube"></i>
+                    </span>
+                    <h2 class="text-2xl font-bold text-white">Pràctica Directa a Unity: GameObjects, Transform i Destroy</h2>
+                </div>
+                <p class="text-slate-300">
+                    Fins ara hem après les bases de C#. És el moment de connectar aquests coneixements amb el motor Unity. En aquesta secció aprendrem a instanciar nous objectes en temps d'execució, modificar la seva posició/escala/rotació a través del <code>Transform</code> i eliminar-los de la memòria amb <code>Destroy</code>.
+                </p>
+
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
+                    <h3 class="font-bold text-white text-base">Conceptes Tècnics Clau</h3>
+                    <div class="grid md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-slate-950 p-4 rounded border border-slate-800">
+                            <strong class="text-emerald-400 block text-sm mb-1">Instantiate()</strong>
+                            Crea una còpia (instància) d'un Prefab o GameObject en temps d'execució.
+                            <pre class="mt-2"><code class="language-csharp">Instantiate(prefab, position, rotation);</code></pre>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded border border-slate-800">
+                            <strong class="text-emerald-400 block text-sm mb-1">Transform</strong>
+                            Component obligatori de tot GameObject. Controla la posició, rotació i escala 3D/2D.
+                            <pre class="mt-2"><code class="language-csharp">transform.position += Vector3.up * speed;</code></pre>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded border border-slate-800">
+                            <strong class="text-emerald-400 block text-sm mb-1">Destroy()</strong>
+                            Elimina un GameObject de la memòria. Pot rebre un temps de retard opcional en segons.
+                            <pre class="mt-2"><code class="language-csharp">Destroy(gameObject, 3.0f);</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOX 3 REPTES UNITY -->
+                <div class="bg-emerald-950/20 border border-emerald-500/30 rounded-2xl p-6 space-y-6">
+                    <h3 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad"></i> 3 Reptes Pràctics d'Integració a Unity
+                    </h3>
+
+                    <!-- Repte 1 -->
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-base">Repte U1: Generador de Pluja d'Objectes (`Instantiate`)</h4>
+                            <span class="text-xs bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded border border-emerald-500/30">Nivell: Inicial</span>
+                        </div>
+                        <p class="text-sm text-slate-300">
+                            Crea un Prefab anomenat <code>CubePrefab</code>. Crea un script anomenat <code>CubeSpawner</code>. Quan l'usuari premi la tecla Espai, instància un nou cub en una posició X aleatòria entre -5 i 5, a una alçada Y de 10.
+                        </p>
+                        <div class="text-xs font-mono bg-slate-950 p-3 rounded text-slate-400">
+                            Pista: Utilitza <code>Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 10f, 0f);</code> i passa-la a <code>Instantiate(cubePrefab, randomPos, Quaternion.identity);</code>
+                        </div>
+                    </div>
+
+                    <!-- Repte 2 -->
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-base">Repte U2: Projectil i Autodestrucció (`Destroy`)</h4>
+                            <span class="text-xs bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded border border-emerald-500/30">Nivell: Intermedi</span>
+                        </div>
+                        <p class="text-sm text-slate-300">
+                            Crea un script <code>Bullet</code> que es mou constantment cap endavant en el mètode <code>Update()</code> modificant la posició del seu <code>transform</code>. A l'<code>Start()</code>, programa la seva autodestrucció al cap de 3 segons per evitar acumular objectes a l'escena.
+                        </p>
+                        <div class="text-xs font-mono bg-slate-950 p-3 rounded text-slate-400">
+                            Pista: En el mètode <code>Start()</code> escriu <code>Destroy(gameObject, 3f);</code>. Dins de <code>Update()</code> utilitza <code>transform.Translate(Vector3.forward * speed * Time.deltaTime);</code>
+                        </div>
+                    </div>
+
+                    <!-- Repte 3 -->
+                    <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-base">Repte U3: Spawneador d'Enemics amb Modificació de Scale</h4>
+                            <span class="text-xs bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded border border-emerald-500/30">Nivell: Avançat</span>
+                        </div>
+                        <p class="text-sm text-slate-300">
+                            Crea un script <code>EnemySpawner</code> que, cada vegada que prems la lletra 'E', instància un enemic, li assigna una escala aleatòria (més gran o més petit) mitjançant el seu <code>transform.localScale</code> i li canvia el color del material de manera aleatòria.
+                        </p>
+                        <div class="text-xs font-mono bg-slate-950 p-3 rounded text-slate-400">
+                            Pista: Desa la referència de l'objecte creat: <code>GameObject newEnemy = Instantiate(enemyPrefab, ...);</code> i des d'aquesta variable modifica <code>newEnemy.transform.localScale</code> i <code>newEnemy.GetComponent&lt;Renderer&gt;().material.color</code>.
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-8 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
+            <p>© 2026 EVPXIA Disseny — Curs d'Especialització en Desenvolupament de Videojocs i VR</p>
+        </div>
+    </footer>
+
+    <!-- Prism.js per ressaltar codi C# -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

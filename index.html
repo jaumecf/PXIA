@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ca" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programació en Xarxa i IA per a Videojocs - CE Videojocs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#0f172a',
+                            dark: '#0b0f19'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-xl">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg text-white block leading-none">CE Videojocs & VR</span>
+                    <span class="text-xs text-blue-400 font-mono">EVPXIA Disseny</span>
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <a href="#temes" class="text-slate-300 hover:text-white transition">Temari</a>
+                <a href="#tecnologies" class="text-slate-300 hover:text-white transition">Tecnològies</a>
+                <a href="tema_1.html" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-play text-xs"></i> Anar al Tema 1
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative py-20 overflow-hidden border-b border-slate-800">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-slate-900 to-brand-dark z-0"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-6">
+                    <i class="fa-solid fa-graduation-cap"></i> Mòdul d'Especialització Professional
+                </span>
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+                    Programació en Xarxa i <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Intel·ligència Artificial</span> per a Videojocs
+                </h1>
+                <p class="text-lg text-slate-400 mb-8 leading-relaxed">
+                    Benvinguts al portal de l'assignatura. Un recorregut exhaustiu des dels fonaments de programació en C# i Unity fins a la implementació de xarxes multijugador en temps real i agents entrenats amb Machine Learning.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="tema_1.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold transition flex items-center gap-3 shadow-lg shadow-blue-600/30">
+                        <i class="fa-solid fa-book-open"></i> Començar el Tema 1 (Fonaments)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grid de Temes -->
+    <main id="temes" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow">
+        <div class="flex items-center justify-between mb-10">
+            <div>
+                <h2 class="text-3xl font-bold text-white mb-2">Mapa del Curs (5 Blocs)</h2>
+                <p class="text-slate-400 text-sm">Contingut progressiu adaptat per a assolir el nivell de desenvolupador de videojocs professional.</p>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Card Tema 1 -->
+            <div class="bg-slate-900 border border-blue-500/30 rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between hover:border-blue-500 transition group shadow-xl">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-bl-full -mr-4 -mt-4 transition group-hover:scale-110"></div>
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">BLOC 1</span>
+                        <span class="text-emerald-400 text-xs font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-check-circle"></i> Disponible
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition">Introducció a C# Modern i Git per a Videojocs</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                        Fonaments des de zero: variables, condicions, bucles, arrays, mètodes, POO completa, estructures de dades, resolució d'algorismes i el flux professional amb Git i Git LFS.
+                    </p>
+                </div>
+                <div>
+                    <div class="border-t border-slate-800 pt-4 mb-4 flex items-center gap-2 text-xs font-mono text-slate-400">
+                        <i class="fa-solid fa-cubes text-blue-400"></i> Inclou 8 reptes d'aula pas a pas
+                    </div>
+                    <a href="tema_1.html" class="block w-full text-center bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 py-2.5 rounded-xl font-bold transition">
+                        Explorar Tema 1 <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card Tema 2 -->
+            <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between opacity-80 hover:opacity-100 transition">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-slate-800 text-slate-400">BLOC 2</span>
+                        <span class="text-slate-500 text-xs font-semibold">Pròximament</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Comunicació en Xarxa (APIs, JSON i Web)</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                        Peticions HTTP asíncrones (`UnityWebRequest`, `async/await`), serialització JSON, taules de classificació en línia i interactivitat amb UI Toolkit.
+                    </p>
+                </div>
+                <div class="border-t border-slate-800/80 pt-4 text-xs font-mono text-slate-500">
+                    Leaderboard & Cloud Content Fetcher
+                </div>
+            </div>
+
+            <!-- Card Tema 3 -->
+            <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between opacity-80 hover:opacity-100 transition">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-slate-800 text-slate-400">BLOC 3</span>
+                        <span class="text-slate-500 text-xs font-semibold">Pròximament</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">IA Clàssica per a Videojocs</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                        Navegació 2D/3D amb NavMesh, Màquines d'Estats Finits (FSM), Arbres de Comportament (Behaviour Trees) i comportaments de grup (Steering Behaviors).
+                    </p>
+                </div>
+                <div class="border-t border-slate-800/80 pt-4 text-xs font-mono text-slate-500">
+                    Dungeon Crawler AI (Guardians i Hordes)
+                </div>
+            </div>
+
+            <!-- Card Tema 4 -->
+            <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between opacity-80 hover:opacity-100 transition">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-slate-800 text-slate-400">BLOC 4</span>
+                        <span class="text-slate-500 text-xs font-semibold">Pròximament</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">IA Basada en Autoaprenentatge (ML)</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                        Entrenament d'agents amb Unity ML-Agents Toolkit, Aprenentatge per Reforç (PPO/SAC), definició de reaccions, recompenses i entorns.
+                    </p>
+                </div>
+                <div class="border-t border-slate-800/80 pt-4 text-xs font-mono text-slate-500">
+                    Autonomous Racer & Arena Combat Agent
+                </div>
+            </div>
+
+            <!-- Card Tema 5 -->
+            <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between opacity-80 hover:opacity-100 transition">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-slate-800 text-slate-400">BLOC 5</span>
+                        <span class="text-slate-500 text-xs font-semibold">Pròximament</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Programació Multijugador i Xarxes</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                        Unity Netcode for Game Objects (NGO), integració amb Unity Gaming Services (Relay i Lobby), sincronització amb `NetworkVariable` i RPCs.
+                    </p>
+                </div>
+                <div class="border-t border-slate-800/80 pt-4 text-xs font-mono text-slate-500">
+                    Co-Op Multiplayer Dungeon Survivor
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
+            <p>© 2026 EVPXIA Disseny — Curs d'Especialització en Desenvolupament de Videojocs i VR</p>
+        </div>
+    </footer>
+
+</body>
+</html>
