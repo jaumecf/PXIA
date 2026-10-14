@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ca" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Professional de Git i Git LFS per a Unity - CE Videojocs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Prism.js per a ressaltat de consola Bash / Git -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0b0f19',
+                            card: '#111827',
+                            border: '#1f2937'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans antialiased leading-relaxed">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="text-slate-400 hover:text-white transition flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> Índex del Curs
+                </a>
+                <span class="text-slate-700">|</span>
+                <span class="text-orange-400 font-mono text-xs font-bold px-2 py-0.5 bg-orange-500/10 rounded border border-orange-500/20">
+                    <i class="fa-brands fa-git-alt"></i> GUIA TRANSVERSAL
+                </span>
+            </div>
+            <div class="text-xs font-mono text-slate-400 hidden sm:block">
+                EVPXIA Disseny — Git & Unity Version Control
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row gap-10">
+
+        <!-- Sidebar Navigation (TOC) -->
+        <aside class="lg:w-64 flex-shrink-0">
+            <div class="sticky top-24 bg-slate-900 border border-slate-800 rounded-xl p-5 text-xs">
+                <h4 class="font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-orange-400"></i> Índex de Consulta
+                </h4>
+                <nav class="space-y-2 font-medium text-slate-400">
+                    <a href="#sec-1" class="block hover:text-orange-400 transition">1. Conceptes Clau de Git</a>
+                    <a href="#sec-2" class="block hover:text-orange-400 transition">2. Setup i Ajustos Unity</a>
+                    <a href="#sec-3" class="block hover:text-orange-400 transition">3. Inicialització (2 Escenaris)</a>
+                    <a href="#sec-4" class="block text-emerald-400 font-bold hover:text-emerald-300 transition">4. Plantilla .gitignore Unity</a>
+                    <a href="#sec-5" class="block hover:text-orange-400 transition">5. Configuració de Git LFS</a>
+                    <a href="#sec-6" class="block hover:text-orange-400 transition">6. Cicle de Treball Diari</a>
+                    <a href="#sec-7" class="block hover:text-orange-400 transition">7. Branques i Experimentació</a>
+                    <a href="#sec-8" class="block hover:text-orange-400 transition">8. Versions Estables (Tags)</a>
+                    <a href="#sec-9" class="block text-amber-400 font-bold hover:text-amber-300 transition">9. Resolució d'Emergències</a>
+                    <a href="#sec-10" class="block hover:text-orange-400 transition">10. Treball Aula vs Casa</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Column -->
+        <main class="flex-1 space-y-16">
+
+            <!-- Title Header -->
+            <header class="border-b border-slate-800 pb-8">
+                <span class="text-xs font-mono text-orange-400 font-bold uppercase tracking-widest block mb-2">Manual de Referència Permanent</span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 flex items-center gap-3">
+                    <i class="fa-brands fa-git-alt text-orange-500"></i> Control de Versions amb Git & Git LFS a Unity
+                </h1>
+                <p class="text-slate-400 text-lg leading-relaxed">
+                    Guia de consulta ràpida per a configurar, gestionar i mantenir projectes de Unity amb Git sense perdre fitxers, corrompre metadades ni saturar el repositori remot.
+                </p>
+            </header>
+
+            <!-- SECCIÓ 1: PER QUÈ GIT I CONCEPTES CLAU -->
+            <section id="sec-1" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-orange-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1</span>
+                    <h2 class="text-2xl font-bold text-white">Conceptes Clau de Git per a Videojocs</h2>
+                </div>
+                <p class="text-slate-300">
+                    Git és un sistema de control de versions distribuït. Per a entendre el seu funcionament, cal conèixer els tres estats pels quals passen els teus canvis:
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-orange-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-folder-open"></i> Working Tree
+                        </h4>
+                        <p class="text-slate-400">Són els fitxers reals del projecte que estàs modificant al teu disc dur des de Unity o la teva IDE.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group"></i> Staging Area
+                        </h4>
+                        <p class="text-slate-400">Zona d'espera on prepares els canvis seleccionats amb <code>git add</code> abans de confirmar-los.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-box-archive"></i> Commit
+                        </h4>
+                        <p class="text-slate-400">Una instantània immutable de la feina seleccionada, registrada amb data, autor i missatge dins la història.</p>
+                    </div>
+                </div>
+
+                <div class="bg-amber-950/20 border border-amber-500/30 p-4 rounded-xl text-xs text-amber-300 flex items-start gap-3">
+                    <i class="fa-solid fa-shield-halved text-base mt-0.5"></i>
+                    <div>
+                        <strong>Recordatori d'Or:</strong> Git <em>no</em> és una còpia de seguretat automàtica dels canvis en temps real. Un canvi local sense <code>commit</code> i sense <code>push</code> no està protegit per l'historial.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 2: CONFIGURACIÓ INICIAL -->
+            <section id="sec-2" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-orange-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">2</span>
+                    <h2 class="text-2xl font-bold text-white">Configuració Inicial i Entorn de Desenvolupament</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">A. Identitat Global i Verificació</h3>
+                    <p class="text-slate-300 text-sm">Executa aquestes comandes per a configurar la teva signatura pública i verificar les eines instal·lades:</p>
+                    <pre><code class="language-bash"># Comprova la instal·lació de Git i LFS
+git --version
+git lfs version
+
+# Configura el teu nom i correu d'autor (no són les credencials d'accés a GitHub!)
+git config --global user.name "ElTeuNom"
+git config --global user.email "el_teu_email@alumne.cat"
+
+# Comprova la configuració desada
+git config --global --list</code></pre>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-orange-400"></i> B. Ajustos Obligatoris a Unity
+                    </h3>
+                    <p class="text-slate-300 text-sm">
+                        Obre el teu projecte de Unity i verifica aquests dos paràmetres a <strong>Edit &gt; Project Settings &gt; Editor</strong>:
+                    </p>
+                    <ul class="list-disc list-inside text-xs text-slate-300 space-y-2">
+                        <li><strong>Version Control Mode:</strong> <code>Visible Meta Files</code> (assegura que cada asset acompanyi el seu fitxer <code>.meta</code> associat).</li>
+                        <li><strong>Asset Serialization Mode:</strong> <code>Force Text</code> (desa escenes i prefabs com a YAML llegibles per a permetre la comparació de canvis en text).</li>
+                    </ul>
+                    <p class="text-xs text-slate-400 pt-2 border-t border-slate-800">
+                        <i class="fa-solid fa-info-circle text-blue-400"></i> Nota avançada: Per a la integració d'escenes col·laboratives, Unity inclou l'eina de fusió intel·ligent <strong>UnityYAMLMerge</strong> (Smart Merge).
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 3: INICIALITZAR PROJECTE -->
+            <section id="sec-3" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-orange-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">3</span>
+                    <h2 class="text-2xl font-bold text-white">Inicialització d'un Projecte Unity (2 Escenaris)</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 text-sm">
+                    <!-- Escenari A -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+                        <h4 class="font-bold text-emerald-400 text-base">Escenari A: Repositori Remot Buit (Recomanat)</h4>
+                        <p class="text-xs text-slate-300">Si ja tens el projecte creat localment i crees un repositori nou a GitHub <strong>sense README ni .gitignore inicial</strong>:</p>
+                        <pre><code class="language-bash">cd ruta/del/projecte
+
+git init
+git remote add origin https://github.com/usuari/repo.git
+
+# Crea el teu .gitignore abans de fer add!
+git add .
+git commit -m "chore: initial project setup"
+
+git branch -M main
+git push -u origin main</code></pre>
+                    </div>
+
+                    <!-- Escenari B -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+                        <h4 class="font-bold text-blue-400 text-base">Escenari B: Repositori Remot amb Contingut Inicial</h4>
+                        <p class="text-xs text-slate-300">Si el repositori de GitHub es va crear amb un README o llicència prèvia, el millor camí és clonar primer:</p>
+                        <pre><code class="language-bash"># 1. Clona el repositori buit al teu disc
+git clone https://github.com/usuari/repo.git
+
+# 2. Copia els fitxers del projecte Unity dins la carpeta clonada
+# 3. Accedeix a la carpeta, afegeix i publica
+cd repo
+git add .
+git commit -m "feat: afegit projecte base de Unity"
+git push origin main</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 4: GITIGNORE -->
+            <section id="sec-4" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">4</span>
+                    <h2 class="text-2xl font-bold text-white">Plantilla `.gitignore` Oficial i Neteja d'Índex</h2>
+                </div>
+                <p class="text-slate-300">
+                    Unity genera carpetes temporals que ocupen gigabytes de memòria i es tornen a generar automàticament (com <code>Library/</code> o <code>Temp/</code>). <strong>Només s'han de versionar <code>Assets/</code>, <code>Packages/</code> i <code>ProjectSettings/</code>.</strong>
+                </p>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <div class="bg-slate-950 px-4 py-2 border-b border-slate-800 font-mono text-xs text-slate-400 flex items-center justify-between">
+                        <span>.gitignore</span>
+                        <span class="text-emerald-400">Unity Standard Template</span>
+                    </div>
+                    <pre><code class="language-none"># Carpetes temporals i de memòria cau de Unity
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+
+# Fitxers de Solució d'IDE (Visual Studio, Rider, VS Code)
+/*.sln
+/*.csproj
+/*.unityproj
+/*.suo
+/*.user
+/*.userprefs
+/*.pidb
+/*.booproj
+/*.svgm
+/*.vs/
+/.idea/
+/.vscode/
+
+# Arxius del sistema operatiu
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Executables compilats locals
+*.apk
+*.aab
+*.exe
+*.app</code></pre>
+                </div>
+
+                <!-- Advertència Important gitignore -->
+                <div class="bg-red-950/20 border border-red-500/30 p-5 rounded-xl space-y-2 text-xs">
+                    <h4 class="font-bold text-red-400 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation"></i> Què passa si ja vaig pujar la carpeta Library/ per error?
+                    </h4>
+                    <p class="text-slate-300">
+                        Si una carpeta o fitxer ja ha estat inclosa a la història de Git, afegir-la al <code>.gitignore</code> <strong>NO l'eliminarà de l'índex</strong>. Has d'eliminar-la explicitament de la memòria cau de Git:
+                    </p>
+                    <pre><code class="language-bash"># Elimina la carpeta Library/ de la memòria de Git sense esborrar-la del teu disc dur
+git rm -r --cached Library/
+git commit -m "chore: eliminada la carpeta Library del control de versions"
+
+# Diagnostica quina regla ignora un fitxer
+git check-ignore -v Library/</code></pre>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 5: GIT LFS -->
+            <section id="sec-5" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-orange-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">5</span>
+                    <h2 class="text-2xl font-bold text-white">Configuració de Git LFS (Large File Storage)</h2>
+                </div>
+                <p class="text-slate-300">
+                    Git LFS substitueix els fitxers pesats (models 3D, textures, àudios) per punters de text lleugers al repositori principal, emmagatzemat els binaris en un servidor optimitzat.
+                </p>
+
+                <pre><code class="language-bash"># 1. Instal·la l'extensió Git LFS al teu entorn local
+git lfs install
+
+# 2. Rastreja les extensions d'assets multimèdia més freqüents
+git lfs track "*.psd"
+git lfs track "*.fbx"
+git lfs track "*.obj"
+git lfs track "*.wav"
+git lfs track "*.mp3"
+git lfs track "*.png"
+git lfs track "*.tga"
+git lfs track "*.exr"
+
+# 3. MOLT IMPORTANT: Deses el fitxer .gitattributes generat
+git add .gitattributes
+git commit -m "chore: configuració de Git LFS per assets multimèdia"</code></pre>
+            </section>
+
+<!-- SECCIÓ 6: CICLE DE TREBALL DIARI -->
+            <section id="sec-6" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-orange-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">6</span>
+                    <h2 class="text-2xl font-bold text-white">Cicle de Treball Diari (Rutina Individual)</h2>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
+                    <h3 class="font-bold text-white text-base">Pas a Pas d'un Desenvolupament Segur</h3>
+                    <pre><code class="language-bash"># 1. Comprova en quin estat està el projecte
+git status
+
+# 2. Revisa els canvis introduïts al codi/projecte
+git diff
+
+# 3. Prepara els fitxers que vols guardar
+git add .
+
+# 4. Revisa exactament què entrarà al commit (Staging Area)
+git diff --cached
+
+# 5. Registra una versió estable amb un missatge clar
+git commit -m "feat: afegeix la mecànica de doble salt"
+
+# 6. Publica els canvis al repositori remot
+git push origin main</code></pre>
+                </div>
+
+                <!-- Nota Pedagògica sobre git add . -->
+                <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl space-y-2 text-xs">
+                    <h4 class="font-bold text-orange-400 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb"></i> Nota de Bones Pràctiques: `git add .` vs. Fitxers Concrets
+                    </h4>
+                    <p class="text-slate-300">
+                        L'ús de <code>git add .</code> és totalment acceptable i ràpid <strong>sempre que abans hagis configurat bé el teu fitxer <code>.gitignore</code></strong> i hagis revisat amb <code>git status</code> què s'està incloent.
+                    </p>
+                    <p class="text-slate-400">
+                        Si vols un control més granular (per exemple, per fer un commit només d'un script i no d'una escena a mig fer), pots afegir fitxers o carpetes de manera individual:
+                    </p>
+                    <pre class="mt-1"><code class="language-bash">git add Assets/Scripts/PlayerController.cs</code></pre>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 7: BRANQUES -->
+            <section id="sec-7" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-orange-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">7</span>
+                    <h2 class="text-2xl font-bold text-white">Branques com a Entorn d'Experimentació</h2>
+                </div>
+                <p class="text-slate-300">
+                    Les branques no només serveixen per a equips. Un desenvolupador individual pot utilitzar una branca com a "sorral" (*sandbox*) per provar una mecànica arriscada sense arruïnar la versió principal que funciona.
+                </p>
+
+                <pre><code class="language-bash"># Crea i canvia a una branca d'experimentació
+git switch -c experiment/ia-enemics
+
+# Programa, prova i fes els teus commits...
+git add .
+git commit -m "feat: proves inicials de navegació amb NavMesh"
+
+# Si l'experiment és un èxit, torna a main i fusiona
+git switch main
+git merge experiment/ia-enemics
+
+# Si l'experiment ha fallat, simplement torna a main i esborra la branca
+git switch main
+git branch -D experiment/ia-enemics</code></pre>
+            </section>
+
+            <!-- SECCIÓ 8: TAGS -->
+            <section id="sec-8" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-orange-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">8</span>
+                    <h2 class="text-2xl font-bold text-white">Marcat de Versions Estables (Etiquetes / Tags)</h2>
+                </div>
+                <p class="text-slate-300">
+                    Utilitza etiquetes per a fixar puntals o fites en el desenvolupament (p. ex., fites de lliurament de pràctiques o la versió final d'una Game Jam).
+                </p>
+
+                <pre><code class="language-bash"># Crea una etiqueta anotada a la versió actual
+git tag -a v0.1.0 -m "Primera versió jugable amb moviment i nivell 1"
+
+# Llista les etiquetes creades
+git tag
+
+# Publica les etiquetes al repositori remot
+git push origin --tags</code></pre>
+            </section>
+
+            <!-- SECCIÓ 9: EMERGÈNCIES -->
+            <section id="sec-9" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-amber-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">9</span>
+                    <h2 class="text-2xl font-bold text-white">Resolució d'Emergències i Guia de Supervivència</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Emergència 1 -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i> 1. Desfer canvis locals no desitjats
+                        </h4>
+                        <p class="text-xs text-slate-300">Restaura un fitxer concrete a l'estat del darrer commit:</p>
+                        <pre><code class="language-bash">git restore Assets/Scripts/PlayerController.cs</code></pre>
+                    </div>
+
+                    <!-- Emergència 2 -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-box-archive"></i> 2. Moure canvis a mitges fent servir el "Calaix" (Stash)
+                        </h4>
+                        <p class="text-xs text-slate-300">
+                            Si tens canvis pendents i necessites canviar de branca o netejar l'entorn ràpidament:
+                        </p>
+                        <pre><code class="language-bash"># 1. Guarda els canvis modificats al calaix temporal global
+git stash
+
+# 2. Canvia de branca o crea una de nova
+git switch -c feature/nova-branca
+
+# 3. Recupera els canvis i aplica'ls a la nova ubicació
+git stash pop</code></pre>
+                    </div>
+
+                    <!-- Emergència 3 -->
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-left"></i> 3. Desfer un commit ja publicat de forma segura (`git revert`)
+                        </h4>
+                        <p class="text-xs text-slate-300">
+                            <code>git revert</code> crea un nou commit que inverteix exactament els canvis d'un commit anterior sense alterar l'historial compartit:
+                        </p>
+                        <pre><code class="language-bash"># Consulta l'historial abreujat per a trobar el codi (hash) del commit
+git log --oneline
+
+# Reverteix el commit conflictor
+git revert <hash-del-commit>
+git push origin main</code></pre>
+                    </div>
+                </div>
+            </section>
+
+<!-- SECCIÓ 10: TREBALL AULA VS CASA -->
+            <section id="sec-10" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-orange-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">10</span>
+                    <h2 class="text-2xl font-bold text-white">Treball Simultani: Aula vs. Casa</h2>
+                </div>
+                <p class="text-slate-300">
+                    Molt habitual entre l'alumnat. Aquest és el procediment per a continuar el teu projecte des d'un ordinador nou o diferent sense generar conflictes de fusió:
+                </p>
+
+                <div class="space-y-4 text-xs">
+                    
+                    <!-- Pas 1 -->
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <div class="flex items-center gap-2 font-bold text-orange-400 text-sm">
+                            <span class="bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded border border-orange-500/30 font-mono">PAS 1</span>
+                            <span>Primera vegada en un ordinador nou (Clonador)</span>
+                        </div>
+                        <p class="text-slate-300">
+                            Assegura't de tenir instal·lat Git LFS al sistema (<code>git lfs install</code>) i descarrega el projecte des del repositori remot:
+                        </p>
+                        <pre class="mt-2"><code class="language-bash">git clone https://github.com/usuari/nom-repositori.git</code></pre>
+                    </div>
+
+                    <!-- Pas 2 -->
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <div class="flex items-center gap-2 font-bold text-orange-400 text-sm">
+                            <span class="bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded border border-orange-500/30 font-mono">PAS 2</span>
+                            <span>Obrir el projecte a Unity</span>
+                        </div>
+                        <p class="text-slate-300">
+                            Obre <strong>Unity Hub</strong>, fes clic a <em>Add project from disk</em>, selecciona la carpeta descarregada i obre-lo. Unity regenerarà automàticament la carpeta local <code>Library/</code> sense necessitat que estigui al repositori.
+                        </p>
+                    </div>
+
+                    <!-- Pas 3 -->
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <div class="flex items-center gap-2 font-bold text-orange-400 text-sm">
+                            <span class="bg-orange-500/20 text-orange-300 px-2 py-0.5 rounded border border-orange-500/30 font-mono">PAS 3</span>
+                            <span>Si ja tenies la carpeta clonada prèviament</span>
+                        </div>
+                        <p class="text-slate-300">
+                            Abans d'obrir l'editor de Unity, descarrega sempre les darreres novetats del codi i dels assets binaris de LFS des de la terminal:
+                        </p>
+                        <pre class="mt-2"><code class="language-bash">git pull origin main
+git lfs pull</code></pre>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-8 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
+            <p>© 2026 EVPXIA Disseny — Curs d'Especialització en Desenvolupament de Videojocs i VR</p>
+        </div>
+    </footer>
+
+    <!-- Prism.js per ressaltar codi Bash -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>
