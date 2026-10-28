@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ca" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 2: Comunicació en Xarxa (APIs, JSON i Web) - CE Videojocs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Prism.js per a ressaltat de sintaxi C# i JSON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0b0f19',
+                            card: '#111827',
+                            border: '#1f2937'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans antialiased leading-relaxed">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="text-slate-400 hover:text-white transition flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> Índex del Curs
+                </a>
+                <span class="text-slate-700">|</span>
+                <span class="text-indigo-400 font-mono text-xs font-bold px-2 py-0.5 bg-indigo-500/10 rounded border border-indigo-500/20">TEMA 2</span>
+            </div>
+            <div class="text-xs font-mono text-slate-400 hidden sm:block">
+                EVPXIA Disseny — UI Canvas, REST APIs & JSON Integration
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row gap-10">
+
+        <!-- Sidebar Navigation (TOC) -->
+        <aside class="lg:w-64 flex-shrink-0">
+            <div class="sticky top-24 bg-slate-900 border border-slate-800 rounded-xl p-5 text-xs">
+                <h4 class="font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Contingut del Tema</h4>
+                <nav class="space-y-2 font-medium text-slate-400">
+                    <a href="#sec-1" class="block hover:text-indigo-400 transition">1. UI Canvas i Interfícies</a>
+                    <a href="#sec-2" class="block hover:text-indigo-400 transition">2. Components de UI (uGUI)</a>
+                    <a href="#sec-3" class="block hover:text-indigo-400 transition">3. Arquitectura REST API</a>
+                    <a href="#sec-4" class="block hover:text-indigo-400 transition">4. Corutines i Main Thread</a>
+                    <a href="#sec-5" class="block hover:text-indigo-400 transition">5. UnityWebRequest (CRUD)</a>
+                    <a href="#sec-6" class="block hover:text-indigo-400 transition">6. JSON i Patró DTO</a>
+                    <a href="#sec-7" class="block text-emerald-400 hover:text-emerald-300 font-bold transition pt-2 border-t border-slate-800">🎮 Repte Pràctic: Leaderboard Online</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Column -->
+        <main class="flex-1 space-y-16">
+
+            <!-- Title Header -->
+            <header class="border-b border-slate-800 pb-8">
+                <span class="text-xs font-mono text-indigo-400 font-bold uppercase tracking-widest block mb-2">Unitat Formativa 2</span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
+                    Comunicació en Xarxa: Interfícies Canvas, APIs REST, Corutines i DTOs amb JSON
+                </h1>
+                <p class="text-slate-400 text-lg leading-relaxed">
+                    Acompanya l'alumnat en la creació d'interfícies d'usuari dinàmiques i la connexió de videojocs Unity amb servidors web remots mitjançant peticions HTTP asíncrones i la serialització de dades.
+                </p>
+            </header>
+
+            <!-- SECCIÓ 1: INTERFÍCIES I CANVAS -->
+            <section id="sec-1" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1</span>
+                    <h2 class="text-2xl font-bold text-white">Introducció a les Interfícies en Unity (uGUI Canvas)</h2>
+                </div>
+                <p class="text-slate-300">
+                    El sistema de UI clàssic de Unity (<strong>uGUI</strong>) es basa en l'element arrel <strong>Canvas</strong>. Tot element d'interfície visual (botons, textos, imatges o panells) ha de ser un fill directe o indirecte d'un <code>Canvas</code> per a poder ser renderitzat a pantalla.
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-indigo-400 text-sm">Screen Space - Overlay</h4>
+                        <p class="text-slate-400">La interfície es dibuixa directament per sobre de la pantalla. Manté la mida fixa independentment de la càmera de joc. Ideal per a HUDs i menús principals.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-indigo-400 text-sm">Screen Space - Camera</h4>
+                        <p class="text-slate-400">El Canvas es renderitza a una distància fixa d'una càmera específica. Permet efectes de perspectiva, postprocessat o partícules afectant la UI.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-indigo-400 text-sm">World Space</h4>
+                        <p class="text-slate-400">El Canvas es comporta com un objecte 3D dins de l'escena. Indispensable per a barres de vida sobre caps d'enemics, pantalles diègetiques o Realitat Virtual (VR).</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3 text-sm">
+                    <h4 class="font-bold text-white text-base flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-to-dot text-indigo-400"></i> Ancoratge (Anchors) i RectTransform
+                    </h4>
+                    <p class="text-slate-300">
+                        Tots els GameObjects de UI tenen un component <code>RectTransform</code> en comptes del <code>Transform</code> habitual. Els <strong>Anchors</strong> (àncores) defineixen com es posiciona i escala un element de UI respecte al seu pare quan canvia la resolució o relació d'aspecte de la pantalla.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 2: COMPONENTS DE CANVAS -->
+            <section id="sec-2" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">2</span>
+                    <h2 class="text-2xl font-bold text-white">Components de UI per a Menús, Formularis i Taules</h2>
+                </div>
+                <p class="text-slate-300">
+                    Per dissenyar pantalles de login, inventaris o taules de classificació (Leaderboards), utilitzem el paquet modern <strong>TextMeshPro (TMP)</strong> i els components de disseny automàtic.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <h4 class="font-bold text-indigo-400 text-sm mb-2">Elements d'Entrada i Control</h4>
+                        <ul class="text-xs space-y-2 text-slate-300">
+                            <li><code>TextMeshPro - Text (TMP)</code>: Etiquetes de text d'alta qualitat basades en Vector SDF (Signed Distance Field).</li>
+                            <li><code>TMP_InputField</code>: Camp de text editable per a credencials o formularis.</li>
+                            <li><code>Button (TMP)</code>: Botó interactiu amb esdeveniments <code>OnClick()</code>.</li>
+                            <li><code>Image</code> / <code>RawImage</code>: Renderitzat de sprites 2D o textures dinàmiques d'API.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <h4 class="font-bold text-indigo-400 text-sm mb-2">Contenidors i Layouts Dinàmics</h4>
+                        <ul class="text-xs space-y-2 text-slate-300">
+                            <li><code>Vertical / Horizontal Layout Group</code>: Organitza automàticament els fills en columnes o files.</li>
+                            <li><code>Grid Layout Group</code>: Organitza els fills en quadrícules (ideal per a inventaris).</li>
+                            <li><code>Content Size Fitter</code>: Reajusta la mida del contenidor segons el contingut fill.</li>
+                            <li><code>Scroll Rect</code>: Permet fer scroll vertical/horitzontal en llistes llargues de dades.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Exemple de Codi: Control de Formulari amb TextMeshPro</h3>
+                    <pre><code class="language-csharp">using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
+public class LoginPanelUI : MonoBehaviour
+{
+    [SerializeField] private TMP_InputField _usernameInput;
+    [SerializeField] private TMP_InputField _passwordInput;
+    [SerializeField] private Button _submitButton;
+    [SerializeField] private TextMeshProUGUI _statusText;
+
+    private void Awake()
+    {
+        // Vincular l'esdeveniment del botó per codi
+        _submitButton.onClick.AddListener(OnSubmitClicked);
+    }
+
+    private void OnSubmitClicked()
+    {
+        string user = _usernameInput.text;
+        string pass = _passwordInput.text;
+
+        if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
+        {
+            _statusText.text = "<color=red>Error: Omple tots els camps!</color>";
+            return;
+        }
+
+        _statusText.text = $"Enviant dades de {user}...";
+    }
+}</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 1 (Format uniforme del Tema 1) -->
+                <div class="bg-blue-950/30 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 1: Disseny i Control de Formularis UI
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 1.1 (Formulari de Registre):</strong> Dissenya un panell UI amb un <code>TMP_InputField</code> per al nom d'usuari, un altre per al correu electrònic i un botó de confirmació. Des del codi, valida que el correu contingui una '@' abans d'activar un missatge de confirmació.</p>
+                        <p><strong>Repte 1.2 (Llista de Classificació Estàtica):</strong> Utilitza un <code>Vertical Layout Group</code> dins d'un <code>Scroll Rect</code> per a instanciar 10 files de prova d'usuaris amb la seva posició i puntuació.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 3: ARQUITECTURA REST API -->
+            <section id="sec-3" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">3</span>
+                    <h2 class="text-2xl font-bold text-white">Arquitectura REST API i Verbs HTTP</h2>
+                </div>
+                <p class="text-slate-300">
+                    Una <strong>API REST</strong> (Representational State Transfer) és un servei web que permet al nostre joc intercanviar dades amb un servidor mitjançant el protocol HTTP. Les operacions estàndard segueixen l'esquema <strong>CRUD</strong> (Create, Read, Update, Delete).
+                </p>
+
+                <div class="grid md:grid-cols-4 gap-3 text-xs">
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <strong class="text-emerald-400 block text-sm mb-1">GET (Read)</strong>
+                        Obté dades del servidor sense modificar-les. Ex: Descarregar la taula de puntuacions.
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <strong class="text-blue-400 block text-sm mb-1">POST (Create)</strong>
+                        Envia dades noves al servidor per crear un recurs. Ex: Registrar un usuari nou.
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <strong class="text-amber-400 block text-sm mb-1">PUT (Update)</strong>
+                        Actualitza un recurs existent al servidor. Ex: Desar la nova posició de l'inventari.
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                        <strong class="text-red-400 block text-sm mb-1">DELETE (Delete)</strong>
+                        Elimina un recurs específic del servidor. Ex: Esborrar un personatge guardat.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 4: CORUTINES I CICLE DE VIDA DEL MAIN THREAD -->
+            <section id="sec-4" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">4</span>
+                    <h2 class="text-2xl font-bold text-white">Execució Asíncrona: Corutines, `async/await` i el Fil Principal (Main Thread)</h2>
+                </div>
+                <p class="text-slate-300">
+                    Les peticions a un servidor web o les tasques d'espera triguen temps en completar-se (latència de xarxa, processament). Per evitar bloquejar l'aplicació, s'han d'executar de forma <strong>asíncrona i no bloquejant</strong>.
+                </p>
+
+                <!-- EL DILÈMA DEL MAIN THREAD -->
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-4">
+                    <h3 class="font-bold text-white text-base flex items-center gap-2">
+                        <i class="fa-solid fa-microchip text-indigo-400"></i> Com funciona el fil principal de Unity (Main Thread)?
+                    </h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Unity és un motor basat essencialment en una arquitectura <strong>monofil (Single-threaded)</strong>. Tota la lògica de gameplay, les entrades de l'usuari (<code>Input</code>), la física, les crides de cicle de vida (<code>Start</code>, <code>Update</code>) i el <strong>renderitzat de la pantalla</strong> s'executen en un únic fil d'execució: el <strong>Main Thread</strong>.
+                    </p>
+
+                    <!-- Diagrama de Cicle de Vida -->
+                    <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 text-xs font-mono text-center overflow-x-auto">
+                        <div class="text-indigo-400 font-bold mb-2">CICLE DE VIDA PER FOTOGRAMA (FRAME CYCLE)</div>
+                        <div class="flex items-center justify-center gap-2 min-w-[600px] text-slate-300">
+                            <span class="bg-slate-900 px-2.5 py-1.5 rounded border border-slate-700">Frame Start</span>
+                            <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                            <span class="bg-slate-900 px-2.5 py-1.5 rounded border border-slate-700">Input</span>
+                            <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                            <span class="bg-indigo-900/50 text-indigo-300 px-2.5 py-1.5 rounded border border-indigo-500/40 font-bold">Update()</span>
+                            <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                            <span class="bg-slate-900 px-2.5 py-1.5 rounded border border-slate-700">Corutines</span>
+                            <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                            <span class="bg-slate-900 px-2.5 py-1.5 rounded border border-slate-700">Renderitzat</span>
+                        </div>
+                    </div>
+
+                    <!-- Advertència Thread.Sleep vs Corutina -->
+                    <div class="grid md:grid-cols-2 gap-4 text-xs pt-2">
+                        <div class="bg-red-950/20 border border-red-500/30 p-4 rounded-lg space-y-2">
+                            <h4 class="font-bold text-red-400 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-circle-xmark"></i> Per què mai hem d'usar Thread.Sleep()?
+                            </h4>
+                            <p class="text-slate-300 leading-relaxed">
+                                Si executes <code>Thread.Sleep(3000)</code> dins d'un <code>Update()</code>, indiques al sistema operatiu que <strong>aturi per complet el fil principal</strong> durant 3 segons.
+                            </p>
+                            <p class="text-slate-400">
+                                <strong>Resultat:</strong> El joc es congela a 0 FPS, la finestra deixa de respondre, la UI no es dibuixa i no es processa cap entrada de teclat o ratolí.
+                            </p>
+                        </div>
+
+                        <div class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-lg space-y-2">
+                            <h4 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check"></i> Com ho soluciona la Corutina (yield return)?
+                            </h4>
+                            <p class="text-slate-300 leading-relaxed">
+                                La paraula clau <code>yield return</code> <strong>no atura el fil</strong>. Simplement "pausa" l'execució d'aquell mètode concret i torna el control immediatament a Unity.
+                            </p>
+                            <p class="text-slate-400">
+                                <strong>Resultat:</strong> Unity continua renderitzant els següents fotogrames a 60+ FPS i, quan es compleix la condició d'espera, repren la corutina des del mateix punt.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXEMPLE DE CODI COMPARATIU -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Exemple Pràctic: Pausa d'Execució Sense Bloquejar el Joc</h3>
+                    <pre><code class="language-csharp">using System.Collections;
+using UnityEngine;
+
+public class CooldownExample : MonoBehaviour
+{
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // ❌ INCORRECTE: Congela tot el joc durant 3 segons (0 FPS)
+            // System.Threading.Thread.Sleep(3000);
+
+            // ✔️ CORRECTE: Inicia una execució pausada no bloquejant
+            StartCoroutine(SkillCooldownCoroutine());
+        }
+    }
+
+    private IEnumerator SkillCooldownCoroutine()
+    {
+        Debug.Log("Habilitat utilitzada!");
+
+        // Pausa NOMÉS aquesta corutina durant 3 segons.
+        // El Main Thread continua processant la resta del joc a 60 FPS.
+        yield return new WaitForSeconds(3.0f);
+
+        Debug.Log("Habilitat recarregada i a punt!");
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 5: UNITYWEBREQUEST -->
+            <section id="sec-5" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">5</span>
+                    <h2 class="text-2xl font-bold text-white">Peticions HTTP amb `UnityWebRequest`</h2>
+                </div>
+                <p class="text-slate-300">
+                    La classe <code>UnityWebRequest</code> és el mòdul oficial de Unity per a gestionar peticions HTTP/HTTPS. A continuació es mostren les eines principals per executar peticions GET i POST.
+                </p>
+
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">1. Execució d'una Petició GET (Dins d'una Corutina)</h3>
+                    <pre><code class="language-csharp">using System.Collections;
+using UnityEngine;
+using UnityEngine.Networking;
+
+public class NetworkManager : MonoBehaviour
+{
+    private const string API_URL = "https://ce-videojocs.free.beeceptor.com/api/v1/store/items";
+
+    public void FetchStoreItems()
+    {
+        StartCoroutine(GetRequestCoroutine(API_URL));
+    }
+
+    private IEnumerator GetRequestCoroutine(string url)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+        {
+            // Espera fins que la petició es completi
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Resposta rebuda: " + webRequest.downloadHandler.text);
+            }
+            else
+            {
+                Debug.LogError($"Error de xarxa [{webRequest.responseCode}]: {webRequest.error}");
+            }
+        }
+    }
+}</code></pre>
+
+                    <h3 class="text-lg font-bold text-white">2. Execució d'una Petició POST amb dades JSON</h3>
+                    <pre><code class="language-csharp">private IEnumerator PostRequestCoroutine(string url, string jsonBody)
+{
+    using (UnityWebRequest webRequest = new UnityWebRequest(url, "POST"))
+    {
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+        webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        webRequest.downloadHandler = new DownloadHandlerBuffer();
+        webRequest.SetRequestHeader("Content-Type", "application/json");
+
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log("Dades enviades correctament!");
+        }
+        else
+        {
+            Debug.LogError("Error en enviar dades POST: " + webRequest.error);
+        }
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 6: JSON I DTO -->
+            <section id="sec-6" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">6</span>
+                    <h2 class="text-2xl font-bold text-white">Tractament de Dades JSON i Patró DTO</h2>
+                </div>
+                <p class="text-slate-300">
+                    Les APIs responen generalment en format <strong>JSON</strong> (JavaScript Object Notation). Per processar aquestes dades a C#, utilitzem el patró <strong>DTO (Data Transfer Object)</strong>: classes C# senzilles que fan de plantilla per a mapejar el text JSON a objectes de memòria.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <h4 class="font-bold text-amber-400 text-sm mb-2">Exemple de Resposta JSON</h4>
+                        <pre><code class="language-json">{
+  "playerID": "Player_99",
+  "level": 5,
+  "gold": 1250,
+  "inventory": ["Espasa", "Poció"]
+}</code></pre>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <h4 class="font-bold text-emerald-400 text-sm mb-2">Classe DTO Equivalent a C#</h4>
+                        <pre><code class="language-csharp">[System.Serializable]
+public class PlayerProfileDTO
+{
+    public string playerID;
+    public int level;
+    public int gold;
+    public string[] inventory;
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Deserialització amb `JsonUtility` i Newtonsoft (`Newtonsoft.Json`)</h3>
+                    <p class="text-slate-300 text-sm">
+                        Unity inclou <code>JsonUtility</code> per a conversions ràpides. Per a estructures de dades més complexes o arrays arrels, es pot utilitzar un <em>wrapper</em> o instal·lar el paquet oficial <code>com.unity.nuget.newtonsoft-json</code>.
+                    </p>
+                    <pre><code class="language-csharp">// Opció A: JsonUtility natiu de Unity
+string jsonText = webRequest.downloadHandler.text;
+PlayerProfileDTO data = JsonUtility.FromJson<PlayerProfileDTO>(jsonText);
+Debug.Log($"Jugador: {data.playerID}, Nivell: {data.level}");
+
+// Opció B: Newtonsoft.Json (Json.NET) per a llistes directes
+List<StoreItemDTO> itemList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<StoreItemDTO>>(jsonText);</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 2 (Format contingut dins una sola capsa com Tema 1) -->
+                <div class="bg-blue-950/30 border border-blue-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-blue-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 2: JSON, APIs REST i Beeceptor
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 2.1 (DTO i Serialització JSON Local):</strong> Dissenya una classe DTO anomenada <code>PlayerProfileDTO</code> marcada amb l'atribut <code>[System.Serializable]</code>. Ha de contenir els camps: <code>playerID</code> (string), <code>level</code> (int), <code>gold</code> (int) i <code>inventory</code> (array de strings). Crea un script que instàncii un objecte d'aquesta classe a l'<code>Start()</code>, el converteixi a JSON amb <code>JsonUtility.ToJson(dto, true)</code> i en mostri el resultat per consola.</p>
+                        
+                        <p><strong>Repte 2.2 (Consulta Asíncrona GET a Beeceptor):</strong> Configura a Beeceptor una <em>Mock Rule</em> de tipus <strong>GET</strong> a la ruta <code>https://reptes-pxia.free.beeceptor.com/items</code> que retorni un JSON amb un llistat d'objectes de la botiga (<code>itemID</code>, <code>itemName</code>, <code>cost</code>, <code>isAvailable</code>). Dissenya la classe DTO <code>ItemDTO</code> i utilitza una corutina amb <code>UnityWebRequest.Get()</code> per a consultar la URL, deserialitzar el JSON i mostrar per consola només els objectes disponibles (<code>isAvailable == true</code>).</p>
+                        
+                        <p><strong>Repte 2.3 (Enviament de Dades POST a la Botiga):</strong> Utilitzant la mateixa estructura <code>ItemDTO</code> del repte anterior, dissenya un script que permeti a un "administrador" crear un nou ítem per a la botiga. En prémer la tecla **Espai** o un botó de la interfície UI, serialitza un nou <code>ItemDTO</code> a JSON i envia'l mitjançant <code>UnityWebRequest</code> amb el mètode **POST** i la capçalera <code>Content-Type: application/json</code> a la mateixa ruta del servidor (<code>https://reptes-pxia.free.beeceptor.com/items</code>) de Beeceptor.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-8 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
+            <p>© 2026 EVPXIA Disseny — Curs d'Especialització en Desenvolupament de Videojocs i VR</p>
+        </div>
+    </footer>
+
+    <!-- Prism.js per ressaltar codi C#, JSON -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+</body>
+</html>
