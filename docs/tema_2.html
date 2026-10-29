@@ -396,47 +396,105 @@ public class NetworkManager : MonoBehaviour
             <section id="sec-6" class="space-y-6">
                 <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
                     <span class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">6</span>
-                    <h2 class="text-2xl font-bold text-white">Tractament de Dades JSON i Patró DTO</h2>
+                    <h2 class="text-2xl font-bold text-white">Tractament de Dades JSON: Serialització, Deserialització i DTO</h2>
                 </div>
                 <p class="text-slate-300">
-                    Les APIs responen generalment en format <strong>JSON</strong> (JavaScript Object Notation). Per processar aquestes dades a C#, utilitzem el patró <strong>DTO (Data Transfer Object)</strong>: classes C# senzilles que fan de plantilla per a mapejar el text JSON a objectes de memòria.
+                    Les APIs REST intercanvien la informació en format <strong>JSON</strong> (JavaScript Object Notation). Per a treballar amb aquestes dades en C#, utilitzem el patró <strong>DTO (Data Transfer Object)</strong>: classes senzilles marcades amb <code>[System.Serializable]</code> que fan de plantilla entre el text JSON i els objectes de C#.
                 </p>
 
+                <!-- Conceptes: Serialització vs Deserialització -->
                 <div class="grid md:grid-cols-2 gap-4">
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                        <h4 class="font-bold text-amber-400 text-sm mb-2">Exemple de Resposta JSON</h4>
-                        <pre><code class="language-json">{
-  "playerID": "Player_99",
-  "level": 5,
-  "gold": 1250,
-  "inventory": ["Espasa", "Poció"]
-}</code></pre>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-file-export"></i> Serialització (Objecte C# ➔ Text JSON)
+                        </h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Procés de convertir una instància de C# o DTO en memòria viva a una cadena de text formatada en JSON. Indispensable per a enviar dades al servidor mitjançant peticions <strong>POST</strong> o <strong>PUT</strong>.
+                        </p>
                     </div>
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                        <h4 class="font-bold text-emerald-400 text-sm mb-2">Classe DTO Equivalent a C#</h4>
-                        <pre><code class="language-csharp">[System.Serializable]
-public class PlayerProfileDTO
-{
-    public string playerID;
-    public int level;
-    public int gold;
-    public string[] inventory;
-}</code></pre>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-file-import"></i> Deserialització (Text JSON ➔ Objecte C#)
+                        </h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Procés invers: agafa la cadena de text JSON rebuda d'una petició <strong>GET</strong> i la reconverteix en instàncies d'objectes C# amb els seus camps i tipus de dades a punt per a utilitzar.
+                        </p>
                     </div>
                 </div>
 
-                <div class="space-y-3">
-                    <h3 class="text-lg font-bold text-white">Deserialització amb `JsonUtility` i Newtonsoft (`Newtonsoft.Json`)</h3>
-                    <p class="text-slate-300 text-sm">
-                        Unity inclou <code>JsonUtility</code> per a conversions ràpides. Per a estructures de dades més complexes o arrays arrels, es pot utilitzar un <em>wrapper</em> o instal·lar el paquet oficial <code>com.unity.nuget.newtonsoft-json</code>.
-                    </p>
-                    <pre><code class="language-csharp">// Opció A: JsonUtility natiu de Unity
-string jsonText = webRequest.downloadHandler.text;
-PlayerProfileDTO data = JsonUtility.FromJson<PlayerProfileDTO>(jsonText);
-Debug.Log($"Jugador: {data.playerID}, Nivell: {data.level}");
+                <!-- Comparativa i Codi: JsonUtility vs Newtonsoft.Json -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">JsonUtility de Unity vs. Newtonsoft.Json (`JsonConvert`)</h3>
+                    
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                        <div class="text-xs text-slate-300 leading-relaxed space-y-2">
+                            <p>
+                                El mòdul natiu <code>JsonUtility</code> és extremadament ràpid, però té una gran limitació: <strong>no pot deserialitzar arrays o llistes arrel directament</strong> (com <code>[{"id":1}, {"id":2}]</code>) a menys que s'embolcallin dins d'un objecte <em>Wrapper</em>.
+                            </p>
+                            <p>
+                                Per als projectes professionals s'utilitza el paquet <strong>Newtonsoft.Json</strong> (instal·lable des del Package Manager de Unity com <code>com.unity.nuget.newtonsoft-json</code>), el qual permet serialitzar i deserialitzar qualsevol llista o array arrel de manera directa amb <code>JsonConvert.DeserializeObject&lt;List&lt;StoreItemDTO&gt;&gt;(jsonString)</code>.
+                            </p>
+                        </div>
 
-// Opció B: Newtonsoft.Json (Json.NET) per a llistes directes
-List<StoreItemDTO> itemList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<StoreItemDTO>>(jsonText);</code></pre>
+                        <div class="border-t border-slate-800 pt-4 space-y-3">
+                            <h4 class="font-bold text-indigo-400 text-sm">Exemple Complet: Serialització i Deserialització Correcta</h4>
+                            <pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Newtonsoft.Json; // Requereix el paquet com.unity.nuget.newtonsoft-json
+
+// 1. Definim el DTO (Plantilla de dades)
+[Serializable]
+public class StoreItemDTO
+{
+    public string itemID;
+    public string itemName;
+    public int cost;
+    public bool isAvailable;
+}
+
+public class JsonSerializationExample : MonoBehaviour
+{
+    private void Start()
+    {
+        // ===================================================
+        // A. SERIALITZACIÓ: De DTO (C#) a Cadena de text JSON
+        // ===================================================
+        StoreItemDTO itemToUpload = new StoreItemDTO
+        {
+            itemID = "wpn_99",
+            itemName = "Rifle de Plasma",
+            cost = 1200,
+            isAvailable = true
+        };
+
+        // Opció 1: Serialització amb JsonUtility (Natiu de Unity)
+        string jsonFromNative = JsonUtility.ToJson(itemToUpload, true);
+
+        // Opció 2: Serialització amb Newtonsoft.Json
+        string jsonFromNewtonsoft = JsonConvert.SerializeObject(itemToUpload, Formatting.Indented);
+
+        Debug.Log("&lt;color=cyan&gt;[SERIALITZACIÓ POST] JSON Generat per enviar al servidor:&lt;/color&gt;\n" + jsonFromNewtonsoft);
+
+
+        // ===================================================
+        // B. DESERIALITZACIÓ: De Cadena JSON a Objectes C#
+        // ===================================================
+        // Imaginem que el servidor ens respon amb aquest JSON (Array arrel):
+        string jsonResponseFromGet = "[{\"itemID\":\"wpn_01\",\"itemName\":\"Espasa\",\"cost\":150,\"isAvailable\":true},{\"itemID\":\"arm_02\",\"itemName\":\"Escut\",\"cost\":300,\"isAvailable\":false}]";
+
+        // Amb Newtonsoft.Json deserialitzem un ARRAY ARREL directament a una List&lt;StoreItemDTO&gt;:
+        List&lt;StoreItemDTO&gt; downloadedItems = JsonConvert.DeserializeObject&lt;List&lt;StoreItemDTO&gt;&gt;(jsonResponseFromGet);
+
+        Debug.Log("&lt;color=green&gt;[DESERIALITZACIÓ GET] Llista d'objectes processada:&lt;/color&gt;");
+        foreach (StoreItemDTO item in downloadedItems)
+        {
+            Debug.Log($"- Item: {item.itemName} | Preu: {item.cost} | Disponible: {item.isAvailable}");
+        }
+    }
+}</code></pre>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- BOX REPTES BLOC 2 (Format contingut dins una sola capsa com Tema 1) -->
@@ -445,11 +503,11 @@ List<StoreItemDTO> itemList = Newtonsoft.Json.JsonConvert.DeserializeObject<List
                         <i class="fa-solid fa-code"></i> Reptes d'Aula 2: JSON, APIs REST i Beeceptor
                     </h3>
                     <div class="space-y-3 text-sm text-slate-300">
-                        <p><strong>Repte 2.1 (DTO i Serialització JSON Local):</strong> Dissenya una classe DTO anomenada <code>PlayerProfileDTO</code> marcada amb l'atribut <code>[System.Serializable]</code>. Ha de contenir els camps: <code>playerID</code> (string), <code>level</code> (int), <code>gold</code> (int) i <code>inventory</code> (array de strings). Crea un script que instàncii un objecte d'aquesta classe a l'<code>Start()</code>, el converteixi a JSON amb <code>JsonUtility.ToJson(dto, true)</code> i en mostri el resultat per consola.</p>
-                        
-                        <p><strong>Repte 2.2 (Consulta Asíncrona GET a Beeceptor):</strong> Configura a Beeceptor una <em>Mock Rule</em> de tipus <strong>GET</strong> a la ruta <code>https://reptes-pxia.free.beeceptor.com/items</code> que retorni un JSON amb un llistat d'objectes de la botiga (<code>itemID</code>, <code>itemName</code>, <code>cost</code>, <code>isAvailable</code>). Dissenya la classe DTO <code>ItemDTO</code> i utilitza una corutina amb <code>UnityWebRequest.Get()</code> per a consultar la URL, deserialitzar el JSON i mostrar per consola només els objectes disponibles (<code>isAvailable == true</code>).</p>
-                        
-                        <p><strong>Repte 2.3 (Enviament de Dades POST a la Botiga):</strong> Utilitzant la mateixa estructura <code>ItemDTO</code> del repte anterior, dissenya un script que permeti a un "administrador" crear un nou ítem per a la botiga. En prémer la tecla **Espai** o un botó de la interfície UI, serialitza un nou <code>ItemDTO</code> a JSON i envia'l mitjançant <code>UnityWebRequest</code> amb el mètode **POST** i la capçalera <code>Content-Type: application/json</code> a la mateixa ruta del servidor (<code>https://reptes-pxia.free.beeceptor.com/items</code>) de Beeceptor.</p>
+                        <p><strong>Repte 2.1 (DTO i Serialització JSON Local):</strong> Dissenya una classe DTO anomenada <code>PlayerProfileDTO</code> marcada amb l'atribut <code>[System.Serializable]</code>. Ha de contenir els camps: <code>playerID</code> (string), <code>level</code> (int), <code>gold</code> (int) i <code>inventory</code> (array de strings). Crea un script que instàncii un objecte d'aquesta classe a l'<code>Start()</code>, el converteixi a JSON amb <code>JsonUtility.ToJson(dto, true)</code> o <code>JsonConvert.SerializeObject()</code> i en mostri el resultat per consola.</p>
+
+                        <p><strong>Repte 2.2 (Consulta Asíncrona GET a Beeceptor):</strong> Configura a Beeceptor una <em>Mock Rule</em> de tipus <strong>GET</strong> a la ruta <code>/api/v1/store/items</code> que retorni un JSON amb un llistat d'objectes de la botiga (<code>itemID</code>, <code>itemName</code>, <code>cost</code>, <code>isAvailable</code>). Dissenya la classe DTO <code>StoreItemDTO</code> i utilitza una corutina amb <code>UnityWebRequest.Get()</code> per a consultar la URL, deserialitzar el JSON directament amb <code>JsonConvert.DeserializeObject&lt;List&lt;StoreItemDTO&gt;&gt;(jsonResponse)</code>, i mostrar per consola només els objectes disponibles (<code>isAvailable == true</code>).</p>
+
+                        <p><strong>Repte 2.3 (Enviament de Dades POST a la Botiga):</strong> Utilitzant la mateixa estructura <code>StoreItemDTO</code> del repte anterior, dissenya un script que permeti a un "administrador" crear un nou ítem per a la botiga. En prémer la tecla **Espai** o un botó de la interfície UI, serialitza un nou <code>StoreItemDTO</code> a JSON amb <code>JsonConvert.SerializeObject()</code> i envia'l mitjançant <code>UnityWebRequest</code> amb el mètode **POST** i la capçalera <code>Content-Type: application/json</code> a la mateixa ruta del servidor (<code>/api/v1/store/items</code>) de Beeceptor.</p>
                     </div>
                 </div>
             </section>
