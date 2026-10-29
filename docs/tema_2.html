@@ -432,7 +432,7 @@ public class NetworkManager : MonoBehaviour
                                 El mòdul natiu <code>JsonUtility</code> és extremadament ràpid, però té una gran limitació: <strong>no pot deserialitzar arrays o llistes arrel directament</strong> (com <code>[{"id":1}, {"id":2}]</code>) a menys que s'embolcallin dins d'un objecte <em>Wrapper</em>.
                             </p>
                             <p>
-                                Per als projectes professionals s'utilitza el paquet <strong>Newtonsoft.Json</strong> (instal·lable des del Package Manager de Unity com <code>com.unity.nuget.newtonsoft-json</code>), el qual permet serialitzar i deserialitzar qualsevol llista o array arrel de manera directa amb <code>JsonConvert.DeserializeObject&lt;List&lt;StoreItemDTO&gt;&gt;(jsonString)</code>.
+                                Per als projectes professionals s'utilitza el paquet <strong>Newtonsoft.Json</strong> (instal·lable des del Package Manager de Unity com <code>com.unity.nuget.newtonsoft-json</code>), el qual permet serialitzar i deserialitzar qualsevol llista o array arrel de manera directa amb <code>JsonConvert.DeserializeObject&amp;lt;List&amp;lt;StoreItemDTO&amp;gt;&amp;gt;(jsonString)</code>.
                             </p>
                         </div>
 
@@ -474,7 +474,7 @@ public class JsonSerializationExample : MonoBehaviour
         // Opció 2: Serialització amb Newtonsoft.Json
         string jsonFromNewtonsoft = JsonConvert.SerializeObject(itemToUpload, Formatting.Indented);
 
-        Debug.Log("&lt;color=cyan&gt;[SERIALITZACIÓ POST] JSON Generat per enviar al servidor:&lt;/color&gt;\n" + jsonFromNewtonsoft);
+        Debug.Log("&amp;lt;color=cyan&amp;gt;[SERIALITZACIÓ POST] JSON Generat per enviar al servidor:&amp;lt;/color&amp;gt;\n" + jsonFromNewtonsoft);
 
 
         // ===================================================
@@ -483,10 +483,10 @@ public class JsonSerializationExample : MonoBehaviour
         // Imaginem que el servidor ens respon amb aquest JSON (Array arrel):
         string jsonResponseFromGet = "[{\"itemID\":\"wpn_01\",\"itemName\":\"Espasa\",\"cost\":150,\"isAvailable\":true},{\"itemID\":\"arm_02\",\"itemName\":\"Escut\",\"cost\":300,\"isAvailable\":false}]";
 
-        // Amb Newtonsoft.Json deserialitzem un ARRAY ARREL directament a una List&lt;StoreItemDTO&gt;:
-        List&lt;StoreItemDTO&gt; downloadedItems = JsonConvert.DeserializeObject&lt;List&lt;StoreItemDTO&gt;&gt;(jsonResponseFromGet);
+        // Amb Newtonsoft.Json deserialitzem un ARRAY ARREL directament a una List&amp;lt;StoreItemDTO&amp;gt;:
+        List&amp;lt;StoreItemDTO&amp;gt; downloadedItems = JsonConvert.DeserializeObject&amp;lt;List&amp;lt;StoreItemDTO&amp;gt;&amp;gt;(jsonResponseFromGet);
 
-        Debug.Log("&lt;color=green&gt;[DESERIALITZACIÓ GET] Llista d'objectes processada:&lt;/color&gt;");
+        Debug.Log("&amp;lt;color=green&amp;gt;[DESERIALITZACIÓ GET] Llista d'objectes processada:&amp;lt;/color&amp;gt;");
         foreach (StoreItemDTO item in downloadedItems)
         {
             Debug.Log($"- Item: {item.itemName} | Preu: {item.cost} | Disponible: {item.isAvailable}");
@@ -505,7 +505,7 @@ public class JsonSerializationExample : MonoBehaviour
                     <div class="space-y-3 text-sm text-slate-300">
                         <p><strong>Repte 2.1 (DTO i Serialització JSON Local):</strong> Dissenya una classe DTO anomenada <code>PlayerProfileDTO</code> marcada amb l'atribut <code>[System.Serializable]</code>. Ha de contenir els camps: <code>playerID</code> (string), <code>level</code> (int), <code>gold</code> (int) i <code>inventory</code> (array de strings). Crea un script que instàncii un objecte d'aquesta classe a l'<code>Start()</code>, el converteixi a JSON amb <code>JsonUtility.ToJson(dto, true)</code> o <code>JsonConvert.SerializeObject()</code> i en mostri el resultat per consola.</p>
 
-                        <p><strong>Repte 2.2 (Consulta Asíncrona GET a Beeceptor):</strong> Configura a Beeceptor una <em>Mock Rule</em> de tipus <strong>GET</strong> a la ruta <code>/api/v1/store/items</code> que retorni un JSON amb un llistat d'objectes de la botiga (<code>itemID</code>, <code>itemName</code>, <code>cost</code>, <code>isAvailable</code>). Dissenya la classe DTO <code>StoreItemDTO</code> i utilitza una corutina amb <code>UnityWebRequest.Get()</code> per a consultar la URL, deserialitzar el JSON directament amb <code>JsonConvert.DeserializeObject&lt;List&lt;StoreItemDTO&gt;&gt;(jsonResponse)</code>, i mostrar per consola només els objectes disponibles (<code>isAvailable == true</code>).</p>
+                        <p><strong>Repte 2.2 (Consulta Asíncrona GET a Beeceptor):</strong> Configura a Beeceptor una <em>Mock Rule</em> de tipus <strong>GET</strong> a la ruta <code>/api/v1/store/items</code> que retorni un JSON amb un llistat d'objectes de la botiga (<code>itemID</code>, <code>itemName</code>, <code>cost</code>, <code>isAvailable</code>). Dissenya la classe DTO <code>StoreItemDTO</code> i utilitza una corutina amb <code>UnityWebRequest.Get()</code> per a consultar la URL, deserialitzar el JSON directament amb <code>JsonConvert.DeserializeObject&amp;lt;List&amp;lt;StoreItemDTO&amp;gt;&amp;gt;(jsonResponse)</code>, i mostrar per consola només els objectes disponibles (<code>isAvailable == true</code>).</p>
 
                         <p><strong>Repte 2.3 (Enviament de Dades POST a la Botiga):</strong> Utilitzant la mateixa estructura <code>StoreItemDTO</code> del repte anterior, dissenya un script que permeti a un "administrador" crear un nou ítem per a la botiga. En prémer la tecla **Espai** o un botó de la interfície UI, serialitza un nou <code>StoreItemDTO</code> a JSON amb <code>JsonConvert.SerializeObject()</code> i envia'l mitjançant <code>UnityWebRequest</code> amb el mètode **POST** i la capçalera <code>Content-Type: application/json</code> a la mateixa ruta del servidor (<code>/api/v1/store/items</code>) de Beeceptor.</p>
                     </div>
