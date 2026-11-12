@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ca" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 3: IA Clàssica per a Videojocs - CE Videojocs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Prism.js per a ressaltat de sintaxi C# -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0b0f19',
+                            card: '#111827',
+                            border: '#1f2937'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Assegura que el codi no forci l'scroll horitzontal del cos de la pàgina */
+        pre[class*="language-"] {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+        }
+        code[class*="language-"] {
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans antialiased leading-relaxed overflow-x-hidden">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="text-slate-400 hover:text-white transition flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> Índex del Curs
+                </a>
+                <span class="text-slate-700">|</span>
+                <span class="text-emerald-400 font-mono text-xs font-bold px-2 py-0.5 bg-emerald-500/10 rounded border border-emerald-500/20">TEMA 3</span>
+            </div>
+            <div class="text-xs font-mono text-slate-400 hidden sm:block">
+                EVPXIA Disseny — Percepció, Steering, Pathfinding A*, NavMesh, FSM & Behaviour Trees
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row gap-10">
+
+        <!-- Sidebar Navigation (TOC) -->
+        <aside class="lg:w-64 flex-shrink-0">
+            <div class="sticky top-24 bg-slate-900 border border-slate-800 rounded-xl p-5 text-xs">
+                <h4 class="font-bold text-white uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">Contingut del Tema</h4>
+                <nav class="space-y-2 font-medium text-slate-400">
+                    <a href="#sec-1" class="block hover:text-emerald-400 transition">1. Fonaments i Percepció Sensorial</a>
+                    <a href="#sec-2" class="block hover:text-emerald-400 transition">2. Steering Behaviors i Flocking</a>
+                    <a href="#sec-3" class="block hover:text-emerald-400 transition">3. Pathfinding: Algorisme A*</a>
+                    <a href="#sec-4" class="block hover:text-emerald-400 transition">4. Navegació 3D amb NavMesh</a>
+                    <a href="#sec-5" class="block hover:text-emerald-400 transition">5. Màquines d'Estats Finits (FSM)</a>
+                    <a href="#sec-6" class="block hover:text-emerald-400 transition">6. Behaviour Trees (Codi i Unity)</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Column -->
+        <main class="flex-1 min-w-0 space-y-16">
+
+            <!-- Title Header -->
+            <header class="border-b border-slate-800 pb-8">
+                <span class="text-xs font-mono text-emerald-400 font-bold uppercase tracking-widest block mb-2">Unitat Formativa 3</span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
+                    IA Clàssica per a Videojocs: Percepció, Moviment Autònom i Presa de Decisions
+                </h1>
+                <p class="text-slate-400 text-lg leading-relaxed">
+                    Dota els personatges no jugables (NPCs) d'autonomia creïble: des de la captació sensorial de l'entorn i el càlcul de rutes òptimes amb A* i NavMesh, fins a arquitectures professionals de comportament amb Màquines d'Estats Finits i Behaviour Trees.
+                </p>
+            </header>
+
+            <!-- SECCIÓ 1: FONAMENTS I PERCEPCIÓ SENSORIAL -->
+            <section id="sec-1" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">1</span>
+                    <h2 class="text-2xl font-bold text-white">Fonaments d'IA i Percepció Sensorial</h2>
+                </div>
+                <p class="text-slate-300">
+                    A diferència de la IA acadèmica (que busca la solució matemàticament perfecta per guanyar sempre), la <strong>IA per a videojocs</strong> busca crear la <strong>il·lusió d'intel·ligència</strong>: agents creïbles, reactius i divertits d'enfrontar sense fer "trampes" (com accedir directament al <code>transform.position</code> del jugador a través de parets).
+                </p>
+
+                <!-- Bucle Sense -> Think -> Act -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-center overflow-x-auto">
+                    <div class="text-emerald-400 font-bold mb-2">ARQUITECTURA D'UN AGENT INTEL·LIGENT (AGENT LOOP)</div>
+                    <div class="flex items-center justify-center gap-3 min-w-[500px] text-slate-300">
+                        <span class="bg-emerald-950/60 text-emerald-300 px-3 py-2 rounded-lg border border-emerald-500/40 font-bold">1. SENSE (Percepció)</span>
+                        <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                        <span class="bg-slate-900 px-3 py-2 rounded-lg border border-slate-700 font-bold">2. THINK (Decisió / Memòria)</span>
+                        <i class="fa-solid fa-arrow-right text-slate-500"></i>
+                        <span class="bg-slate-900 px-3 py-2 rounded-lg border border-slate-700 font-bold">3. ACT (Moviment / Acció)</span>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-eye"></i> Sistema de Visió (Con FOV)
+                        </h4>
+                        <p class="text-slate-400">Combina 3 filtres: proximitat (<code>Physics.OverlapSphere</code>), angle de visió (<code>Vector3.Angle</code>) i comprovació d'obstacles (<code>Physics.Raycast</code> amb <code>LayerMask</code>).</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-ear-listen"></i> Sistema d'Oïda (Esdeveniments)
+                        </h4>
+                        <p class="text-slate-400">Propagació de soroll per radi quan el jugador corre o llença un objecte. Permet detectar perills fora del camp visual.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-brain"></i> Memòria a Curt Termini
+                        </h4>
+                        <p class="text-slate-400">Emmagatzema l'<code>últimaPosicióConeguda</code> i un temporitzador de sospita perquè l'enemic investigui abans d'abandonar la recerca.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Exemple de Codi: Con de Visió amb Línia de Visió i Gizmos</h3>
+                    <pre><code class="language-csharp">using UnityEngine;
+
+public class FieldOfViewSensor : MonoBehaviour
+{
+    [Header("Paràmetres de Visió")]
+    public float viewRadius = 12f;
+    [Range(0, 360)] public float viewAngle = 90f;
+
+    [Header("Màscares de Capes")]
+    public LayerMask targetMask;
+    public LayerMask obstacleMask;
+
+    public Transform VisibleTarget { get; private set; }
+    public Vector3 LastKnownPosition { get; private set; }
+
+    private void Update()
+    {
+        DetectTargets();
+    }
+
+    private void DetectTargets()
+    {
+        VisibleTarget = null;
+        // 1. Filtre de distància
+        Collider[] targetsInRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
+
+        foreach (Collider targetCol in targetsInRadius)
+        {
+            Transform target = targetCol.transform;
+            Vector3 dirToTarget = (target.position - transform.position).normalized;
+
+            // 2. Filtre d'angle (Con de visió)
+            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2f)
+            {
+                float distToTarget = Vector3.Distance(transform.position, target.position);
+
+                // 3. Filtre d'obstacles (Línia de visió directa)
+                if (!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
+                {
+                    VisibleTarget = target;
+                    LastKnownPosition = target.position;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Dibuix de depuració visual a l'Editor de Unity
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = VisibleTarget != null ? Color.red : Color.green;
+        Gizmos.DrawWireSphere(transform.position, viewRadius);
+
+        Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2f, 0) * transform.forward * viewRadius;
+        Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2f, 0) * transform.forward * viewRadius;
+
+        Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
+        Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
+
+        if (VisibleTarget != null)
+            Gizmos.DrawLine(transform.position, VisibleTarget.position);
+    }
+}</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 1 -->
+                <div class="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-emerald-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 1: Sentits Artificials i Infiltració
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 1.1 (Sensor Visual i Cobertures):</strong> Implementa el component <code>FieldOfViewSensor</code> sobre un guàrdia en una escena amb parets i columnes (assignades a la capa <code>Obstacle</code>). Verifica mitjançant els <em>Gizmos</em> que el con canvia a vermell només quan el jugador entra dins l'angle i no hi ha cap obstacle pel mig.</p>
+                        <p><strong>Repte 1.2 (Sistema d'Oïda i Emissor de Soroll):</strong> Crea un script <code>NoiseEmitter</code> per al jugador que, en prémer la tecla <strong>Shift</strong> (córrer) o llançar una pedra, utilitzi <code>Physics.OverlapSphere</code> per notificar a tots els guàrdies propers mitjançant una interfície <code>IHearable</code> amb el mètode <code>OnSoundHeard(Vector3 origin)</code>.</p>
+                        <p><strong>Repte 1.3 (Indicador d'Alerta Diegètic):</strong> Afegeix un <em>Canvas en World Space</em> sobre el cap del guàrdia que mostri una barra o icona d'alerta (<code>?</code> groc quan sent un soroll o perd de vista el jugador, <code>!</code> vermell quan el té en línia de visió).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 2: STEERING BEHAVIORS I FLOCKING -->
+            <section id="sec-2" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">2</span>
+                    <h2 class="text-2xl font-bold text-white">Moviment Autònom: Steering Behaviors i Flocking</h2>
+                </div>
+                <p class="text-slate-300">
+                    Formulats per <strong>Craig Reynolds</strong>, els <em>Steering Behaviors</em> generen moviment orgànic i fluid aplicant forces d'acceleració sobre una velocitat actual (evitant girs robòtics instantanis). La fórmula fonamental és:
+                </p>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 font-mono text-xs text-emerald-300 text-center">
+                    Steering Force = Desired Velocity − Current Velocity
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 text-xs">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm">Comportaments Individuals</h4>
+                        <ul class="space-y-1.5 text-slate-300">
+                            <li><strong>Seek / Flee:</strong> Accelera cap a un objectiu o en direcció oposada a una amenaça.</li>
+                            <li><strong>Arrive:</strong> Com <em>Seek</em>, però redueix progressivament la velocitat dins un radi de frenada per aturar-se sense passar-se.</li>
+                            <li><strong>Pursuit / Evade:</strong> Prediu la posició futura de l'objectiu segons la seva velocitat actual per interceptar-lo.</li>
+                            <li><strong>Wander:</strong> Projecta un cercle davant l'agent i desplaça aleatòriament un punt sobre la seva circumferència per deambular de forma natural.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm">Comportaments de Grup (Flocking)</h4>
+                        <ul class="space-y-1.5 text-slate-300">
+                            <li><strong>Separació (Separation):</strong> Força de repulsió respecte als veïns massa propers per evitar col·lisions.</li>
+                            <li><strong>Alineació (Alignment):</strong> Iguala la direcció i velocitat mitjana dels agents del voltant.</li>
+                            <li><strong>Cohesió (Cohesion):</strong> Empeny l'agent cap al centre de massa (posició mitjana) del grup.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Exemple de Codi: Seek, Arrive i Separació en C#</h3>
+                    <pre><code class="language-csharp">using System.Collections.Generic;
+using UnityEngine;
+
+public class SteeringAgent : MonoBehaviour
+{
+    public float maxSpeed = 6f;
+    public float maxForce = 12f;
+    public float slowingRadius = 3f;
+    public float separationRadius = 1.8f;
+
+    private Vector3 _velocity;
+
+    public Vector3 Arrive(Vector3 targetPos)
+    {
+        Vector3 toTarget = targetPos - transform.position;
+        float distance = toTarget.magnitude;
+        if (distance < 0.05f) return Vector3.zero;
+
+        // Redueix la velocitat si entra dins el radi de frenada
+        float rampedSpeed = maxSpeed * (distance / slowingRadius);
+        float clippedSpeed = Mathf.Min(rampedSpeed, maxSpeed);
+
+        Vector3 desiredVelocity = (toTarget / distance) * clippedSpeed;
+        return Vector3.ClampMagnitude(desiredVelocity - _velocity, maxForce);
+    }
+
+    public Vector3 Separation(List<SteeringAgent> neighbors)
+    {
+        Vector3 steering = Vector3.zero;
+        int count = 0;
+
+        foreach (SteeringAgent other in neighbors)
+        {
+            if (other == this) continue;
+            float dist = Vector3.Distance(transform.position, other.transform.position);
+            if (dist > 0 && dist < separationRadius)
+            {
+                Vector3 pushDir = (transform.position - other.transform.position).normalized;
+                steering += pushDir / dist; // Més fort com més a prop estigui
+                count++;
+            }
+        }
+
+        if (count > 0)
+        {
+            steering /= count;
+            steering = steering.normalized * maxSpeed - _velocity;
+            steering = Vector3.ClampMagnitude(steering, maxForce);
+        }
+        return steering;
+    }
+
+    public void ApplySteering(Vector3 totalForce)
+    {
+        _velocity = Vector3.ClampMagnitude(_velocity + totalForce * Time.deltaTime, maxSpeed);
+        transform.position += _velocity * Time.deltaTime;
+
+        if (_velocity.sqrMagnitude > 0.01f)
+            transform.forward = Vector3.Slerp(transform.forward, _velocity.normalized, Time.deltaTime * 10f);
+    }
+}</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 2 -->
+                <div class="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-emerald-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 2: Eixams i Formacions Autònomes
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 2.1 (Persecució Predictiva - Pursuit):</strong> Amplia la classe <code>SteeringAgent</code> amb el mètode <code>Pursuit(Transform target, Vector3 targetVelocity)</code> que calculi el temps d'intercepció <code>T = distància / maxSpeed</code> i apliqui <code>Seek</code> sobre la posició futura <code>target.position + targetVelocity * T</code>.</p>
+                        <p><strong>Repte 2.2 (Simulador de Flocking):</strong> Instancia 25 drons o peixos que combinin les forces ponderades de <strong>Separació</strong>, <strong>Alineació</strong> i <strong>Cohesió</strong> per moure's com un banc cohesionat, afegint una força de <code>Flee</code> quan s'acosti el cursor o un depredador.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 3: PATHFINDING - ALGORISME A* DES DE ZERO -->
+            <section id="sec-3" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">3</span>
+                    <h2 class="text-2xl font-bold text-white">Pathfinding: L'Algorisme A* (A-Star) des de Zero</h2>
+                </div>
+                <p class="text-slate-300">
+                    Els <em>Steering Behaviors</em> fallen quan hi ha laberints o parets pel mig. Per trobar el camí més curt entre dos punts en un mapa discretitzat (graella o graf), l'estàndard de la indústria és l'algorisme <strong>A*</strong>, que combina el cost real recorregut amb una estimació heurística fins a la meta.
+                </p>
+
+                <!-- Fòrmula F = G + H -->
+                <div class="grid md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <strong class="text-emerald-400 block text-sm mb-1">G Cost (Cost Acumulat)</strong>
+                        Distància exacta recorreguda des del node d'inici fins al node actual (10 en ortogonal, 14 en diagonal).
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <strong class="text-amber-400 block text-sm mb-1">H Cost (Heurística)</strong>
+                        Estimació de la distància restant fins al node destí (Distància Manhattan o Diagonal/Octile).
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl">
+                        <strong class="text-cyan-400 block text-sm mb-1">F Cost = G + H</strong>
+                        Prioritat total del node. A* sempre explora primer el node de la <strong>Open List</strong> amb el <code>F Cost</code> més baix.
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Implementació Completa d'A* sobre Graella 2D en C#</h3>
+                    <pre><code class="language-csharp">using System.Collections.Generic;
+using UnityEngine;
+
+public class PathNode
+{
+    public Vector2Int gridPos;
+    public bool isWalkable;
+    public int gCost;
+    public int hCost;
+    public int FCost => gCost + hCost;
+    public PathNode parent;
+
+    public PathNode(Vector2Int pos, bool walkable)
+    {
+        gridPos = pos;
+        isWalkable = walkable;
+    }
+}
+
+public class AStarPathfinder : MonoBehaviour
+{
+    public List<PathNode> FindPath(PathNode[,] grid, Vector2Int startPos, Vector2Int targetPos)
+    {
+        PathNode startNode = grid[startPos.x, startPos.y];
+        PathNode targetNode = grid[targetPos.x, targetPos.y];
+
+        List<PathNode> openSet = new List<PathNode> { startNode };
+        HashSet<PathNode> closedSet = new HashSet<PathNode>();
+
+        startNode.gCost = 0;
+        startNode.hCost = GetDistance(startNode, targetNode);
+
+        while (openSet.Count > 0)
+        {
+            // 1. Seleccionar el node amb menor FCost (i menor HCost en cas d'empat)
+            PathNode currentNode = openSet[0];
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].FCost < currentNode.FCost ||
+                   (openSet[i].FCost == currentNode.FCost && openSet[i].hCost < currentNode.hCost))
+                {
+                    currentNode = openSet[i];
+                }
+            }
+
+            openSet.Remove(currentNode);
+            closedSet.Add(currentNode);
+
+            // 2. Hem arribat al destí? Reconstruïm el camí
+            if (currentNode == targetNode)
+                return RetracePath(startNode, targetNode);
+
+            // 3. Avaluar tots els veïns transitable no visitats
+            foreach (PathNode neighbor in GetNeighbors(grid, currentNode))
+            {
+                if (!neighbor.isWalkable || closedSet.Contains(neighbor))
+                    continue;
+
+                int newMovementCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbor);
+                if (newMovementCostToNeighbor < neighbor.gCost || !openSet.Contains(neighbor))
+                {
+                    neighbor.gCost = newMovementCostToNeighbor;
+                    neighbor.hCost = GetDistance(neighbor, targetNode);
+                    neighbor.parent = currentNode;
+
+                    if (!openSet.Contains(neighbor))
+                        openSet.Add(neighbor);
+                }
+            }
+        }
+        return null; // No existeix cap camí possible
+    }
+
+    private List<PathNode> RetracePath(PathNode startNode, PathNode endNode)
+    {
+        List<PathNode> path = new List<PathNode>();
+        PathNode current = endNode;
+
+        while (current != startNode)
+        {
+            path.Add(current);
+            current = current.parent;
+        }
+        path.Reverse();
+        return path;
+    }
+
+    private int GetDistance(PathNode a, PathNode b)
+    {
+        int dstX = Mathf.Abs(a.gridPos.x - b.gridPos.x);
+        int dstY = Mathf.Abs(a.gridPos.y - b.gridPos.y);
+        // Cost diagonal = 14, ortogonal = 10
+        return dstX > dstY ? 14 * dstY + 10 * (dstX - dstY) : 14 * dstX + 10 * (dstY - dstX);
+    }
+
+    private List<PathNode> GetNeighbors(PathNode[,] grid, PathNode node)
+    {
+        List<PathNode> neighbors = new List<PathNode>();
+        int width = grid.GetLength(0);
+        int height = grid.GetLength(1);
+
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0) continue;
+                int checkX = node.gridPos.x + x;
+                int checkY = node.gridPos.y + y;
+
+                if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height)
+                    neighbors.Add(grid[checkX, checkY]);
+            }
+        }
+        return neighbors;
+    }
+}</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 3 -->
+                <div class="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-emerald-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 3: Laberints i Visualitzador A*
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 3.1 (Graella Interactiva i Dibuix de Rutes):</strong> Construeix un generador de graella 20x20 en Unity on fent clic esquerre col·loquis o treguis murs (<code>isWalkable = false</code>) i fent clic dret fixis el destí. Dibuixa amb <code>OnDrawGizmos</code> els nodes de la <code>closedSet</code> en vermell clar, els de la <code>openSet</code> en verd i el camí final en blau.</p>
+                        <p><strong>Repte 3.2 (Terrenys amb Cost Variable):</strong> Afegeix un camp <code>movementPenalty</code> (int) a <code>PathNode</code> per simular zones de fang (cost +20) o carreteres (cost 0). Comprova com A* prefereix envoltar el fang si la volta és més barata que travessar-lo.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 4: NAVEGACIÓ 3D AMB NAVMESH -->
+            <section id="sec-4" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">4</span>
+                    <h2 class="text-2xl font-bold text-white">Navegació 3D Professional amb `AI Navigation` (NavMesh)</h2>
+                </div>
+                <p class="text-slate-300">
+                    En entorns 3D complexos, discretitzar el món amb una graella consumiria massa memòria. El paquet oficial <strong>AI Navigation</strong> de Unity transforma la geometria caminable de l'escena en una <strong>malla de polígons convexos (NavMesh)</strong> sobre la qual s'executa A* de manera ultraoptimitzada.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4 text-xs">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm">Components Principals</h4>
+                        <ul class="space-y-1.5 text-slate-300">
+                            <li><code>NavMeshSurface</code>: Defineix quins objectes formen part de la superfície navegable i permet re-generar-la (<em>Bake</em>) en temps d'execució.</li>
+                            <li><code>NavMeshAgent</code>: Component de l'NPC que calcula la ruta, evita col·lisions locals (<em>Obstacle Avoidance</em>) i mou l'agent.</li>
+                            <li><code>NavMeshModifier</code>: Permet marcar zones específiques com a no caminables o assignar-los un cost d'àrea (ex: <em>Aigua</em>, <em>Foc</em>).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm">Obstacles Dinàmics i Salts</h4>
+                        <ul class="space-y-1.5 text-slate-300">
+                            <li><code>NavMeshObstacle</code>: Per a portes corredisses o caixes mòbils. Activant <strong>Carving</strong>, l'obstacle forada dinàmicament el NavMesh perquè els agents recalculin la ruta.</li>
+                            <li><code>NavMeshLink</code>: Connecta dues superfícies separades (ex: saltar d'un balcó, creuar un abisme o pujar per una escala de mà).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Exemple de Codi: Control d'un NavMeshAgent i Punts de Patrulla</h3>
+                    <pre><code class="language-csharp">using UnityEngine;
+using UnityEngine.AI;
+
+[RequireComponent(typeof(NavMeshAgent))]
+public class PatrolNavigator : MonoBehaviour
+{
+    [SerializeField] private Transform[] _waypoints;
+    [SerializeField] private float _waypointTolerance = 0.5f;
+
+    private NavMeshAgent _agent;
+    private int _currentIndex = 0;
+
+    private void Awake()
+    {
+        _agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Start()
+    {
+        if (_waypoints.Length > 0)
+            _agent.SetDestination(_waypoints[0].position);
+    }
+
+    private void Update()
+    {
+        if (_waypoints.Length == 0) return;
+
+        // Comprovar si l'agent ha acabat de calcular el camí i ha arribat al destí
+        if (!_agent.pathPending && _agent.remainingDistance <= _waypointTolerance)
+        {
+            _currentIndex = (_currentIndex + 1) % _waypoints.Length;
+            _agent.SetDestination(_waypoints[_currentIndex].position);
+        }
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 5: MÀQUINES D'ESTATS FINITS (FSM) -->
+            <section id="sec-5" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">5</span>
+                    <h2 class="text-2xl font-bold text-white">Arquitectura de Decisions I: Màquines d'Estats Finits (FSM)</h2>
+                </div>
+                <p class="text-slate-300">
+                    Un error habitual és programar el comportament d'un enemic amb un <code>switch</code> o una cadena gegant d'<code>if/else</code> dins d'un únic <code>Update()</code>. Això genera codi espagueti impossible de mantenir. La solució professional és aplicar el <strong>Patró de Disseny State</strong>, encapsulant cada estat en la seva pròpia classe amb tres fases clares: <code>Enter()</code>, <code>Tick()</code> i <code>Exit()</code>.
+                </p>
+
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">Exemple de Codi: Arquitectura FSM Modular en C#</h3>
+                    <pre><code class="language-csharp">using UnityEngine;
+
+// 1. Contracte comú per a qualsevol estat
+public interface IState
+{
+    void Enter();
+    void Tick();
+    void Exit();
+}
+
+// 2. Gestor de transicions d'estat
+public class StateMachine
+{
+    public IState CurrentState { get; private set; }
+
+    public void ChangeState(IState newState)
+    {
+        if (newState == null || newState == CurrentState) return;
+
+        CurrentState?.Exit();
+        CurrentState = newState;
+        CurrentState.Enter();
+    }
+
+    public void Update()
+    {
+        CurrentState?.Tick();
+    }
+}
+
+// 3. Exemple d'un Estat concret desacoplat
+public class ChaseState : IState
+{
+    private readonly GuardAI _guard;
+
+    public ChaseState(GuardAI guard) => _guard = guard;
+
+    public void Enter()
+    {
+        _guard.Agent.speed = _guard.chaseSpeed;
+        Debug.Log("Estat: PERSECUCIÓ iniciada!");
+    }
+
+    public void Tick()
+    {
+        if (_guard.Sensor.VisibleTarget != null)
+        {
+            _guard.Agent.SetDestination(_guard.Sensor.VisibleTarget.position);
+
+            if (Vector3.Distance(_guard.transform.position, _guard.Sensor.VisibleTarget.position) <= _guard.attackRange)
+                _guard.FSM.ChangeState(_guard.AttackState);
+        }
+        else
+        {
+            // Ha perdut de vista el jugador -> Passa a investigar l'última posició
+            _guard.FSM.ChangeState(_guard.SearchState);
+        }
+    }
+
+    public void Exit()
+    {
+        // Neteja d'animacions o efectes en sortir de l'estat
+    }
+}</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 4 -->
+                <div class="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-emerald-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 4: Guàrdia Tàctic amb NavMesh + FSM
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 4.1 (Cicle Complet de Seguretat):</strong> Construeix un escenari 3D amb portes corredisses (<code>NavMeshObstacle</code> amb <em>Carving</em>) i zones d'alerta. Implementa una <code>StateMachine</code> per al guàrdia amb 4 estats: <code>PatrolState</code>, <code>InvestigateState</code> (quan sent un soroll o perd el jugador de vista), <code>ChaseState</code> i <code>AttackState</code>.</p>
+                        <p><strong>Repte 4.2 (Comunicació per Ràdio):</strong> Quan un guàrdia entri en <code>ChaseState</code>, emetrà un avís als companys en un radi de 15 metres perquè també canviïn el seu estat i convergeixin cap a la posició del jugador.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓ 6: BEHAVIOUR TREES -->
+            <section id="sec-6" class="space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                    <span class="bg-emerald-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm">6</span>
+                    <h2 class="text-2xl font-bold text-white">Arquitectura de Decisions II: Behaviour Trees (Arbres de Comportament)</h2>
+                </div>
+                <p class="text-slate-300">
+                    Quan un enemic té 15 o 20 comportaments diferents, les Màquines d'Estats Finits pateixen una <strong>explosió de transicions</strong> (tots els estats s'han de connectar amb tots). Els <strong>Behaviour Trees (BT)</strong> resolen aquest problema organitzant la lògica en un arbre jeràrquic modular de nodes reutilitzables i una memòria compartida anomenada <strong>Blackboard</strong>.
+                </p>
+
+                <!-- Tipus de Nodes -->
+                <div class="grid md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-emerald-400 text-sm">Nodes Compostos (Control de Flux)</h4>
+                        <p class="text-slate-300"><strong>Sequence (AND):</strong> Executa els fills d'esquerra a dreta fins que un falla (<code>Failure</code>). Si tots tenen èxit, retorna <code>Success</code>.</p>
+                        <p class="text-slate-300"><strong>Selector (OR):</strong> Prova els fills fins que un té èxit (<code>Success</code>). Ideal per a prioritats (Ex: <em>Curar-se -> Atacar -> Patrullar</em>).</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm">Decoradors (Modificadors)</h4>
+                        <p class="text-slate-300">Embolcallen un únic node fill per alterar-ne el resultat o l'execució: <strong>Inverter</strong> (converteix Success en Failure), <strong>Repeater</strong> o <strong>Cooldown</strong>.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <h4 class="font-bold text-cyan-400 text-sm">Nodes Fulla (Execució)</h4>
+                        <p class="text-slate-300"><strong>Condition:</strong> Comprova una dada del <em>Blackboard</em> (ex: <code>Vida < 30%</code>).</p>
+                        <p class="text-slate-300"><strong>Action:</strong> Executa una tasca real (ex: <code>MoureACobertura</code>) i retorna <code>Running</code> mentre dura.</p>
+                    </div>
+                </div>
+
+                <!-- PART A: IMPLEMENTACIÓ EN CODI PUR -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-white">1. Com funciona per dins: Mini-Framework de Behaviour Tree en C#</h3>
+                    <pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+
+public enum NodeState { Running, Success, Failure }
+
+public abstract class BTNode
+{
+    public abstract NodeState Evaluate();
+}
+
+// Node Compost: SEQUENCE (Tots els fills han de retornar Success)
+public class Sequence : BTNode
+{
+    private readonly List<BTNode> _children;
+    public Sequence(List<BTNode> children) => _children = children;
+
+    public override NodeState Evaluate()
+    {
+        foreach (BTNode node in _children)
+        {
+            switch (node.Evaluate())
+            {
+                case NodeState.Failure: return NodeState.Failure;
+                case NodeState.Running: return NodeState.Running;
+            }
+        }
+        return NodeState.Success;
+    }
+}
+
+// Node Compost: SELECTOR (El primer fill que retorni Success o Running guanya)
+public class Selector : BTNode
+{
+    private readonly List<BTNode> _children;
+    public Selector(List<BTNode> children) => _children = children;
+
+    public override NodeState Evaluate()
+    {
+        foreach (BTNode node in _children)
+        {
+            switch (node.Evaluate())
+            {
+                case NodeState.Success: return NodeState.Success;
+                case NodeState.Running: return NodeState.Running;
+            }
+        }
+        return NodeState.Failure;
+    }
+}
+
+// Node Fulla genèric per a Condicions o Accions ràpides
+public class ActionNode : BTNode
+{
+    private readonly Func<NodeState> _action;
+    public ActionNode(Func<NodeState> action) => _action = action;
+    public override NodeState Evaluate() => _action();
+}</code></pre>
+                </div>
+
+                <!-- PART B: EINA VISUAL UNITY BEHAVIOR -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <h3 class="font-bold text-white text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-diagram-project text-emerald-400"></i> 2. Flux Professional amb l'Eina Oficial: Unity Behavior
+                    </h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Un cop entesa l'arquitectura interna de nodes, en producció utilitzem editors visuals perquè dissenyadors i programadors puguin depurar el flux en temps real. El paquet oficial <strong>Unity Behavior</strong> (<code>com.unity.behavior</code>, instal·lable des del <em>Package Manager</em>) integra:
+                    </p>
+                    <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                        <li><strong>Behavior Graph Editor:</strong> Editor visual de nodes amb depuració en viu durant el <em>Play Mode</em> (il·lumina quina branca s'està executant en cada fotograma).</li>
+                        <li><strong>Blackboard Integrat:</strong> Panell de variables tipades (<code>GameObject</code>, <code>Vector3</code>, <code>float</code>, <code>bool</code>) compartides entre tots els nodes del graf i modificables des de C#.</li>
+                        <li><strong>Custom Nodes en C#:</strong> Generació automàtica d'Action Nodes i Condition Nodes personalitzats amb l'atribut <code>[SerializeReference]</code>.</li>
+                    </ul>
+
+                    <pre><code class="language-csharp">using Unity.Behavior;
+using UnityEngine;
+
+// Exemple d'actualització d'una variable del Blackboard de Unity Behavior des de C#
+public class EnemyBlackboardSync : MonoBehaviour
+{
+    [SerializeField] private BehaviorGraphAgent _behaviorAgent;
+    [SerializeField] private FieldOfViewSensor _sensor;
+    [SerializeField] private float _currentHealth = 100f;
+
+    private void Update()
+    {
+        // Sincronitzem les dades dels sensors amb el Blackboard del graf visual
+        _behaviorAgent.SetVariableValue("TargetPlayer", _sensor.VisibleTarget?.gameObject);
+        _behaviorAgent.SetVariableValue("Health", _currentHealth);
+    }
+}</code></pre>
+                </div>
+
+                <!-- BOX REPTES BLOC 5 -->
+                <div class="bg-emerald-950/30 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+                    <h3 class="text-xl font-bold text-emerald-300 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> Reptes d'Aula 5: IA Tàctica amb Behaviour Trees
+                    </h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <p><strong>Repte 5.1 (Arbre de Supervivència en C# Pur):</strong> Utilitzant les classes <code>Selector</code>, <code>Sequence</code> i <code>ActionNode</code>, programa un arbre de decisió per a un cap de nivell amb 3 branques prioritàries: <strong>1)</strong> Si <code>vida &lt; 25%</code>, fugir cap a l'estació de curació; <strong>2)</strong> Si el jugador és visible i a rang, atacar; <strong>3)</strong> Patrullar l'arena.</p>
+                        <p><strong>Repte 5.2 (Graf Visual amb Unity Behavior):</strong> Instal·la el paquet <code>com.unity.behavior</code>, crea un <em>Behavior Graph</em> visual amb un <em>Blackboard</em> que inclogui <code>TargetPlayer</code>, <code>AmmoCount</code> i <code>CoverPoint</code>. Dissenya un soldat que busqui cobertura i recarregui l'arma quan <code>AmmoCount == 0</code> abans de tornar a disparar.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-8 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
+            <p>© 2026 EVPXIA Disseny — Curs d'Especialització en Desenvolupament de Videojocs i VR</p>
+        </div>
+    </footer>
+
+    <!-- Prism.js per ressaltar codi C# -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+</body>
+</html>
